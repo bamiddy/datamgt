@@ -1,0 +1,80 @@
+---
+title: "Genetics"
+format: html
+editor: visual
+---
+
+```{r}
+periodA <- c(240, 237, 266, 215, 228, 237, 245)
+periodB <- c(250, 240, 267, 210, 224, 243, 265)
+
+wilcox.test(periodA, periodB, paired = TRUE)
+```
+
+```{r}
+periodA <- c(240, 237, 266, 215, 228, 237, 245)
+periodB <- c(250, 240, 267, 210, 224, 243, 265)
+
+t.test(periodA, periodB, paired = TRUE)
+```
+
+```{r}
+d = read.table("http://merlin.up.poznan.pl/~mcszyd/dyda/Experimental-Design/swine-data.txt", header = TRUE)
+```
+
+```{r}
+attach(d)
+IMF[IMF>0] -> z
+plot(density(z))
+plot(density(log(z)))
+```
+
+## Probability In Binomial Distribution
+
+```{r}
+dbinom(x = 10,size = 100, prob = 1/6) #k is the same as x here, and n is the size. the prob is the parameter
+```
+
+```{r}
+dbinom(4, 4,prob =  0.1) #The prob that all will experience the sickeness
+```
+
+```{r}
+pp = 0.1  #What the producer said
+y = 4 #no of success(event occur, affected side effect, also as k)
+n = 4 # total sample
+p = y/n # 
+
+
+```
+
+```{r}
+z = (p-pp)/(sqrt(pp*(1-pp)/n))
+pvalue = 1-pnorm(6)
+z
+pvalue
+```
+
+```{r}
+binom.test(4,4, 0.1, alternative = "greater")
+```
+
+```{r}
+x = c(23, 10)
+n = c(145, 79)
+prop.test(x = x, n = n, alternative = "greater") #WE use prop for two binomial distribution
+```
+
+Confidential Interval
+
+```{r}
+n = 20490
+k =54
+p = k/n
+z = qnorm(0.975)
+
+ul = p + z*sqrt((p*(1-p)/n))
+ll = p - z*sqrt((p*(1-p)/n))
+ul
+ll
+```
