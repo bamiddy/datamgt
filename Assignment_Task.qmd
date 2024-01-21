@@ -1,0 +1,119 @@
+---
+title: "Assignment"
+format: html
+editor: visual
+---
+
+
+```{r}
+data = read.table("http://merlin.up.poznan.pl/~mcszyd/dyda/Experimental-Design/swine-data.txt", head= TRUE)
+```
+
+
+### PAGE 59: TASK 4
+```{r}
+library(tidyverse)
+
+opt <-  data |> 
+  filter(IMF >= 1 & IMF <=2 ) |> 
+    group_by(Breed) |> 
+  summarise(Optimal =n()) 
+ 
+non_opt <- data |> 
+  filter(IMF != 0 & (IMF < 1 | IMF > 2)) |> 
+   group_by(Breed) |> 
+  summarise(NonOptimal =n())
+   
+IMF_data <- merge(opt, non_opt, by = "Breed")
+
+Optimal <- IMF_data$Optimal
+NonOptimal <- IMF_data$NonOptimal
+
+comp <- rbind(Optimal, NonOptimal)
+chisq.test(comp)
+```
+
+
+## PAGE 39: TASK 2
+```{r}
+levOfSig = 0.05
+Z = qnorm(0.975) #Two tail, more or less
+
+# H0 : mean == 90.2  pig require 90.2days
+# H1 : mean != 90.2  require more or fewer days
+
+U = 90.2
+days = data$Days100
+n = length(days)
+x = mean(days)
+s = sd(days)
+zcal = (x - U)/(s/sqrt(n)) 
+p = 1 - pnorm(zcal)
+
+Z
+zcal
+p
+
+# We can conclude that pig require more and 
+```
+
+## PAGE 46: TASK 2
+```{r}
+# Two sample test, alpha divide by 2
+sigLevel = 0.05
+alpha = qnorm(0.975)
+beta = qnorm(0.999)
+
+# Filter two breed from the Data
+two_breed = subset(data, Breed == "PL" | Breed == "PLW")
+
+carcass = two_breed$CarcassL
+cv = var(carcass)
+
+n = (2*cv*(alpha+beta)^2)/(0.5^2)
+n
+```
+
+## PAGE 52: TASK 3
+```{r}
+PLw_DATA <- subset(data, Breed == "PLW")
+PLW_BFT1 <- PLw_DATA$BFT1
+#hist(PLW_BFT1)
+L990_DATA <- subset(data, Breed == "L990")
+L990_BFT1 <- L990_DATA$BFT1
+#hist(L990_BFT1) Both distributins follow normal distribution
+
+qf(p=.05, df1=191, df2=243, lower.tail=FALSE)
+
+var.test(PLW_BFT1, L990_BFT1, alternative = "less")
+
+#There is no enough evidence to reject the null hypothesis
+#We can conclude that the two distributions have homogenous varience
+```
+
+```         
+F test to compare two variances
+```
+
+data: PLW_BFT1 and L990_BFT1 F = 0.91368, num df = 191, denom df = 243, p-value = 0.514 alternative hypothesis: true ratio of variances is not equal to 1 95 percent confidence interval: 0.6998843 1.1980221 sample estimates: ratio of variances 0.9136793
+
+### PAGE 59: TASK 3
+```{r}
+FA = c(24,40,16)
+NF = c(27,45,18)
+UN = c(9,15,6)
+
+dec = cbind(FA,NF,UN)
+
+chisq.test(dec)  
+  
+```
+
+Pearson's Chi-squared test
+
+data: dec X-squared = 0, df = 4, p-value = 1
+
+
+
+
+

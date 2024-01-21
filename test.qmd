@@ -129,9 +129,15 @@ normal <- c(15, 50, 25)
 elev <- c(15, 10, 5)
 very_high <- c(30,40,10)
 
-gene <-  rbind(normal, elev, very_high)
+gene <-  cbind(normal, elev, very_high)
 chisq.test(gene) # Pvalue is very low
 ```
+
+	Pearson's Chi-squared test
+
+data:  gene
+X-squared = 18.194, df = 4, p-value = 0.001131
+
 
 ```{r}
 library(usethis)
