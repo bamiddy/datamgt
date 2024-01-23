@@ -156,5 +156,5 @@ gitcreds_set()
 ```
 
 ```{r}
-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
+
 ```
