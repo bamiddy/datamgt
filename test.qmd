@@ -133,11 +133,11 @@ gene <-  cbind(normal, elev, very_high)
 chisq.test(gene) # Pvalue is very low
 ```
 
-	Pearson's Chi-squared test
+```         
+Pearson's Chi-squared test
+```
 
-data:  gene
-X-squared = 18.194, df = 4, p-value = 0.001131
-
+data: gene X-squared = 18.194, df = 4, p-value = 0.001131
 
 ```{r}
 library(usethis)
@@ -153,4 +153,8 @@ library(gitcreds)
 
 ```{r}
 gitcreds_set()
+```
+
+```{r}
+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
 ```
