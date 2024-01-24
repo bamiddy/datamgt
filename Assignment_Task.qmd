@@ -4,67 +4,114 @@ format: html
 editor: visual
 ---
 
+### Import the swine_data from the NET
 
 ```{r}
-data = read.table("http://merlin.up.poznan.pl/~mcszyd/dyda/Experimental-Design/swine-data.txt", head= TRUE)
+data = read.table("http://merlin.up.poznan.pl/~mcszyd/dyda/Experimental-Design/swine-data.txt", header = TRUE)
 ```
 
 
+# 1
 ### PAGE 59: TASK 4
+
+#### Test used: Chi-sqare TEST OF INDEPENDENCY.
+
+Level of Significant(α) = 0.05
+
+H0: No Contingency between IMF Classifications and breed
+
+H1: There is contingency between IMF Classifications and breed
+
 ```{r}
 library(tidyverse)
 
-opt <-  data |> 
+
+#Filter the optimal percentage of Intramuscular fat(IMF)
+opt <-  data |>   
   filter(IMF >= 1 & IMF <=2 ) |> 
     group_by(Breed) |> 
-  summarise(Optimal =n()) 
- 
+  summarise(Optimal =n()) #Count the number and naming the column as Optimal
+
+#Filter the NONoptimal percentage of IMF, and removing ZERO which rep a missing observation.
 non_opt <- data |> 
   filter(IMF != 0 & (IMF < 1 | IMF > 2)) |> 
    group_by(Breed) |> 
-  summarise(NonOptimal =n())
+  summarise(NonOptimal =n()) #Count the number and naming the column as NonOptimal
    
-IMF_data <- merge(opt, non_opt, by = "Breed")
+IMF_data <- merge(opt, non_opt, by = "Breed") #Merge the two column by "BREED" to form a DATAFRAME
 
-Optimal <- IMF_data$Optimal
+Optimal <- IMF_data$Optimal         #Extract the column of interest from the dataframe
 NonOptimal <- IMF_data$NonOptimal
 
-comp <- rbind(Optimal, NonOptimal)
+comp <- rbind(Optimal, NonOptimal) #Bind the two rows of the data
 chisq.test(comp)
 ```
 
+CONCLUSION: Because the p-value is higher than the significant level, we cannot reject the null hypothesis. so there is not enough statistical evidence to conclude a significant contingency between IMF Classification and Breed.
 
+
+
+# 2
 ## PAGE 39: TASK 2
+
+### Test Use::One sample Student t-test, two tailed
+
+Level of Significant(α) = 0.05 
+
+H0: pig require 90.2days 
+
+H1: Pig require more or less days than 90.2
+
+t = ( x̄ – μ) / (s / √n)
+
 ```{r}
+
 levOfSig = 0.05
 Z = qnorm(0.975) #Two tail, more or less
 
 # H0 : mean == 90.2  pig require 90.2days
 # H1 : mean != 90.2  require more or fewer days
 
-U = 90.2
+ = 90.2
 days = data$Days100
 n = length(days)
 x = mean(days)
 s = sd(days)
-zcal = (x - U)/(s/sqrt(n)) 
-p = 1 - pnorm(zcal)
+tcal = (x - U)/(s/sqrt(n)) 
+pvalue = 2*(1 - pnorm(tcal)) 
+#pvalue = 2*pnorm(q=tcal, lower.tail=FALSE)
 
-Z
-zcal
-p
+cat("Using The Hand Method \nThe t_score is",tcal, 
+    "\nThe critical/rejection point is",Z, 
+    "\nThe critical/rejection point is",Z, 
+    "\nThe p_value is", pvalue)
 
-# We can conclude that pig require more and 
+
+t.test(days, mu = 90.2) #Using the r_function of t-test, the result is similar.
+
+
+
+
 ```
 
+CONCLUSION: The test result shows that the pvalue(0.001812) is lower than the (α) = 0.05, implying highly significant and also the t_score(3.131888) fall at the rejection region. So there is highly significant evidence that Pig require more or less days than 90.2days to reach 100kg of body weight.
+
+
+# 3
 ## PAGE 46: TASK 2
+
+### Test used: Choosing sample size using Two Sided Test
+
 ```{r}
-# Two sample test, alpha divide by 2
+
+#Breed Choose from the data breeds are Poland Large white(PLW) and Poland Landrace(PL) 
+
 sigLevel = 0.05
-alpha = qnorm(0.975)
+alpha = qnorm(0.975) # Two Sided test, alpha divide by 2
 beta = qnorm(0.999)
 
 # Filter two breed from the Data
+
 two_breed = subset(data, Breed == "PL" | Breed == "PLW")
 
 carcass = two_breed$CarcassL
@@ -74,48 +121,65 @@ n = (2*cv*(alpha+beta)^2)/(0.5^2)
 n
 ```
 
+Conlusion: For high Test Power of 99.9% and To minimize the sample size(cost), it require 652-Samples to estimate the differnce/variance in the mean carcass length between Poland Large white(PLW) and Poland Landrace(PL)
+
+
+
+# 4
 ## PAGE 52: TASK 3
+
+### Test Used: Testing for Homogeneity of variance using Variance Comparison F_test(Fisher's test) 
+
+H0: The BFT1 distributions in PLW and L990 have homogeneous variance 
+
+H1: Variance of Back Fat Thickness (BFT1) Distribution is less in PLW than in the synthetic line L990
+
 ```{r}
+# H0: σ²₁ = σ²₂
+# H1: σ²₁ < σ²₂
+ 
+
 PLw_DATA <- subset(data, Breed == "PLW")
 PLW_BFT1 <- PLw_DATA$BFT1
 #hist(PLW_BFT1)
 L990_DATA <- subset(data, Breed == "L990")
 L990_BFT1 <- L990_DATA$BFT1
-#hist(L990_BFT1) Both distributins follow normal distribution
+#hist(L990_BFT1) Both distributions follow normal distribution
 
-qf(p=.05, df1=191, df2=243, lower.tail=FALSE)
+F_value = qf(p=.05, df1=191, df2=243, lower.tail=FALSE) #To cal the F₀.₀₅,₁₉₉,₂₄₃
+
+paste("The F-Critical value is", F_value)
 
 var.test(PLW_BFT1, L990_BFT1, alternative = "less")
 
 #There is no enough evidence to reject the null hypothesis
-#We can conclude that the two distributions have homogenous varience
+#We can conclude that the two distributions have homogeneous variance
 ```
+Conclusion: Since the F(0.913) < F-critical Value(1.250) at numerator df(191) and denominator df(243) at 5% α, There is no enough evidence to reject the null hypothesis So we can conclude that the distributions of Back fat thickness of PLW and synthetic line L990 have homogeneous variances. Therefore, we can proceed with further testing.
 
-```         
-F test to compare two variances
-```
 
-data: PLW_BFT1 and L990_BFT1 F = 0.91368, num df = 191, denom df = 243, p-value = 0.514 alternative hypothesis: true ratio of variances is not equal to 1 95 percent confidence interval: 0.6998843 1.1980221 sample estimates: ratio of variances 0.9136793
 
-### PAGE 59: TASK 3
+
+
+# 5
+## PAGE 59: TASK 3
+
+### Test used: Chi-sqare TEST OF INDEPENDENCY.
+H0: No Contingency between GMO Opinion and Geography
+
+H1: There is a Contingency between GMO Opinion and Geography
+
 ```{r}
+# H0: No Contingency/Dependency
+# H1: There is a Contingency
+#Level of Significant = 0.05
+
 FA = c(24,40,16)
 NF = c(27,45,18)
 UN = c(9,15,6)
 
-dec = cbind(FA,NF,UN)
+LocOp = rbind(FA,NF,UN)
 
-chisq.test(dec)  
-  
+chisq.test(LocOp)
 ```
-
-Pearson's Chi-squared test
-
-data: dec X-squared = 0, df = 4, p-value = 1
-
-
-
-
-
-
-
+Because the p-value is higher than the significant level(α=0.05), we cannot reject the null hypothesis. so there is not enough statistical evidence to conclude a significant contingency between GMO Opinion and Farmer location(Geography).
