@@ -183,3 +183,57 @@ LocOp = rbind(FA,NF,UN)
 chisq.test(LocOp)
 ```
 Because the p-value is higher than the significant level(α=0.05), we cannot reject the null hypothesis. so there is not enough statistical evidence to conclude a significant contingency between GMO Opinion and Farmer location(Geography).
+
+# 6
+## PAGE 51: TASK 1
+
+```{r}
+qchisq(0.975, df = 9)
+qchisq(p = 0.975, df = 9, lower.tail = FALSE)
+```
+
+
+### Confidential interval using chi-square, 
+```{r}
+Milk_yield = c(12928, 12120, 14972, 14044, 14788, 13812, 14358, 8998,
+               10620, 14744, 11036, 9248, 9980, 11990, 14786)
+m = mean(Milk_yield)
+v = var(Milk_yield) # Sample Variance
+n = length(Milk_yield)
+α   = 0.05 # Estimate conf_int(1-α) of 95%
+def = n-1  #Degree of freedeom
+# α/2 = 0.025   #Right p = 0.975
+# 1-α/2 = 0.975  #Left p = 0.025
+
+
+#Ques A:: Using Chi-square(X²) for conf-interval for population variance(σ²) estimate: s²
+
+# FOR X² at 1-α/2, df=14... use the probability(p) as the argument
+a = qchisq(0.025, df = def)
+# FOR X² at α/2, df=14... use the probability(p) as the argument
+b = qchisq(0.975, df = def)
+
+LL = (def*v)/b
+UL = (def*v)/a
+
+#Ques B:: for population standard deviation (σ) estimate: s
+L = sqrt(LL)
+U = sqrt(UL)
+
+#Ques C:: Confidential interval for Population mean estimate::
+z = qnorm(0.975)
+ul = m + (z*sqrt(v))/sqrt(n)
+ll = m - (z*sqrt(v))/sqrt(n)
+std_int = U-L
+mean_int = ul-ll  #Mean interval is wider
+std_int
+mean_int
+
+#Ques D:: 
+E = mean_int/2 #Half of width
+
+n = (z^2*v)/E^2
+
+```
+
+
