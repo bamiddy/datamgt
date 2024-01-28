@@ -1,5 +1,5 @@
 ---
-title: "Assignment"
+title: "Oluwatobi_Bello Task"
 format: html
 editor: visual
 ---
@@ -11,7 +11,7 @@ data = read.table("http://merlin.up.poznan.pl/~mcszyd/dyda/Experimental-Design/s
 ```
 
 
-# 1
+# CLASS ASSIGNMENT
 ### PAGE 59: TASK 4
 
 #### Test used: Chi-sqare TEST OF INDEPENDENCY.
@@ -51,7 +51,7 @@ CONCLUSION: Because the p-value is higher than the significant level, we cannot 
 
 
 
-# 2
+# EXCERCISE 1
 ## PAGE 39: TASK 2
 
 ### Test Use::One sample Student t-test, two tailed
@@ -97,7 +97,7 @@ t.test(days, mu = 90.2) #Using the r_function of t-test, the result is similar.
 CONCLUSION: The test result shows that the pvalue(0.001812) is lower than the (α) = 0.05, implying highly significant and also the t_score(3.131888) fall at the rejection region. So there is highly significant evidence that Pig require more or less days than 90.2days to reach 100kg of body weight.
 
 
-# 3
+# EXCERCISE 2
 ## PAGE 46: TASK 2
 
 ### Test used: Choosing sample size using Two Sided Test
@@ -125,7 +125,7 @@ Conlusion: For high Test Power of 99.9% and To minimize the sample size(cost), i
 
 
 
-# 4
+# EXCERCISE 3
 ## PAGE 52: TASK 3
 
 ### Test Used: Testing for Homogeneity of variance using Variance Comparison F_test(Fisher's test) 
@@ -161,7 +161,7 @@ Conclusion: Since the F(0.913) < F-critical Value(1.250) at numerator df(191) an
 
 
 
-# 5
+# EXCERCISE 4
 ## PAGE 59: TASK 3
 
 ### Test used: Chi-sqare TEST OF INDEPENDENCY.
@@ -183,20 +183,20 @@ LocOp = rbind(FA,NF,UN)
 chisq.test(LocOp)
 ```
 Because the p-value is higher than the significant level(α=0.05), we cannot reject the null hypothesis. so there is not enough statistical evidence to conclude a significant contingency between GMO Opinion and Farmer location(Geography).
+ 
+ 
 
-# 6
+
+# EXCERCISE 5
 ## PAGE 51: TASK 1
+### Confidential interval of σ² and σ  using chi-square, and mean mean confidential interval and estimation of population size
+### TEST USED: chi-square AND Ztable.
 
 ```{r}
-qchisq(0.975, df = 9)
-qchisq(p = 0.975, df = 9, lower.tail = FALSE)
-```
 
-
-### Confidential interval using chi-square, 
-```{r}
 Milk_yield = c(12928, 12120, 14972, 14044, 14788, 13812, 14358, 8998,
                10620, 14744, 11036, 9248, 9980, 11990, 14786)
+
 m = mean(Milk_yield)
 v = var(Milk_yield) # Sample Variance
 n = length(Milk_yield)
@@ -217,8 +217,8 @@ LL = (def*v)/b
 UL = (def*v)/a
 
 #Ques B:: for population standard deviation (σ) estimate: s
-L = sqrt(LL)
-U = sqrt(UL)
+L = sqrt((def*v))/sqrt(b)  # alternative formula:::  sqrt(LL)
+U = sqrt((def*v))/sqrt(a)  # alternative formula:::  sqrt(UL)
 
 #Ques C:: Confidential interval for Population mean estimate::
 z = qnorm(0.975)
@@ -232,8 +232,17 @@ mean_int
 #Ques D:: 
 E = mean_int/2 #Half of width
 
-n = (z^2*v)/E^2
+numb = (z^2*v)/E^2
+
+cat("The  variance confidential interval are between ",LL, "and", UL)
+cat(". The  standard deviation confidential interval are between",L, "and", U)
+cat(". The  Mean confidential interval are between",ll, "and", ul)
+cat(". The mean interval/width of ",mean_int, "is wider than the standard deviation interval/width of", std_int)
+cat(". The sample size required to estimate the population mean is", numb)
 
 ```
+
+
+
 
 
