@@ -4,22 +4,29 @@ format: html
 editor: visual
 ---
 
-## Load Package and data
+## Load Package and data. The data has been cleaned
 
 ```{r}
 library(tidyverse)
+library(janitor)
+My_data <-  readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-08-24/lemur_data.csv')
+
+My_data <- My_data |> 
+  clean_names()
 ```
 
-```{r}
-My_data = readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-08-24/lemur_data.csv')
-```
 
+
+Visualize the data distribution on Bar_Chart based on the basic class (taxon)
 ```{r}
 My_data |> 
   ggplot(aes(y=fct_infreq(taxon), fill=birth_type)) +
+  labs(y = "Taxon of lemur", x = "Lemur taxon Count", 
+       title = "Distribution of lemur taxon showing the type of birth",
+       caption = "Birth Type: captive-born (CB), wild-born (WB) and unknown (UNK)") +
   geom_bar() 
 ```
-
+Let us restrict our search to those born at the Duke Lemur Center.
 ```{r}
 my_data <- 
   My_data |>
@@ -32,7 +39,7 @@ my_data |>
   sample_n(100) |> 
   ggplot(aes(x= age_at_wt_d, y= weight_g)) +
   geom_point(aes(color = hybrid)) +
-  geom_smooth() +
+  geom_smooth(method = 'loess', formula = 'y ~ x') +
   facet_wrap(~taxon)
 ```
 
@@ -193,11 +200,3 @@ my_data |>
   ggplot(aes(x = weight_g)) +
   geom_histogram(binwidth = 120)
 ```
-
-
-
-
-
-
-
-
