@@ -43,6 +43,8 @@ IMF_data <- merge(opt, non_opt, by = "Breed") #Merge the two column by "BREED" t
 Optimal <- IMF_data$Optimal         #Extract the column of interest from the dataframe
 NonOptimal <- IMF_data$NonOptimal
 
+IMF_data
+
 comp <- rbind(Optimal, NonOptimal) #Bind the two rows of the data
 chisq.test(comp)
 ```
@@ -60,7 +62,7 @@ Level of Significant(α) = 0.05
 
 H0: pig require 90.2days 
 
-H1: Pig require more or less days than 90.2
+H1: Pig require more or less days than 90.2days
 
 t = ( x̄ – μ) / (s / √n)
 
@@ -72,7 +74,7 @@ Z = qnorm(0.975) #Two tail, more or less
 # H0 : mean == 90.2  pig require 90.2days
 # H1 : mean != 90.2  require more or fewer days
 
- = 90.2
+U = 90.2
 days = data$Days100
 n = length(days)
 x = mean(days)
@@ -82,8 +84,7 @@ pvalue = 2*(1 - pnorm(tcal))
 #pvalue = 2*pnorm(q=tcal, lower.tail=FALSE)
 
 cat("Using The Hand Method \nThe t_score is",tcal, 
-    "\nThe critical/rejection point is",Z, 
-    "\nThe critical/rejection point is",Z, 
+    "\nThe critical/rejection point is",Z,
     "\nThe p_value is", pvalue)
 
 
@@ -146,7 +147,7 @@ L990_DATA <- subset(data, Breed == "L990")
 L990_BFT1 <- L990_DATA$BFT1
 #hist(L990_BFT1) Both distributions follow normal distribution
 
-F_value = qf(p=.05, df1=191, df2=243, lower.tail=FALSE) #To cal the F₀.₀₅,₁₉₉,₂₄₃
+F_value = qf(p=.05, df1=191, df2=243, lower.tail=FALSE) #To calc the F₀.₀₅,₁₉₉,₂₄₃
 
 paste("The F-Critical value is", F_value)
 
@@ -155,7 +156,7 @@ var.test(PLW_BFT1, L990_BFT1, alternative = "less")
 #There is no enough evidence to reject the null hypothesis
 #We can conclude that the two distributions have homogeneous variance
 ```
-Conclusion: Since the F(0.913) < F-critical Value(1.250) at numerator df(191) and denominator df(243) at 5% α, There is no enough evidence to reject the null hypothesis So we can conclude that the distributions of Back fat thickness of PLW and synthetic line L990 have homogeneous variances. Therefore, we can proceed with further testing.
+Conclusion: Since the F(0.913) < F-critical Value(1.250) at numerator df(191) and denominator df(243) at 5% α, There is no enough evidence to reject the null hypothesis. So we can conclude that the distributions of Back fat thickness of PLW and synthetic line L990 have homogeneous variances. Therefore, we can proceed with further testing or analysis.
 
 
 
@@ -190,7 +191,7 @@ Because the p-value is higher than the significant level(α=0.05), we cannot rej
 # EXCERCISE 5
 ## PAGE 51: TASK 1
 ### Confidential interval of σ² and σ  using chi-square, and mean mean confidential interval and estimation of population size
-### TEST USED: chi-square AND Ztable.
+### TEST USED: chi-square and Z-test.
 
 ```{r}
 
@@ -226,8 +227,6 @@ ul = m + (z*sqrt(v))/sqrt(n)
 ll = m - (z*sqrt(v))/sqrt(n)
 std_int = U-L
 mean_int = ul-ll  #Mean interval is wider
-std_int
-mean_int
 
 #Ques D:: 
 E = mean_int/2 #Half of width
