@@ -33,12 +33,15 @@ my_data <-
   filter(birth_institution == "Duke Lemur Center")
 ```
 
+With random sampling of 100 Spcies from each taxon, let's view their growth rate. by plotting age to weigh_gain 
 ```{r}
 my_data |> 
   group_by(taxon) |> 
   sample_n(100) |> 
   ggplot(aes(x= age_at_wt_d, y= weight_g)) +
   geom_point(aes(color = hybrid)) +
+  labs(x = "Age at weight", y = "Weight gain", 
+       title = "Plots showing the rate of growth across various lemur taxon") +
   geom_smooth(method = 'loess', formula = 'y ~ x') +
   facet_wrap(~taxon)
 ```
@@ -55,23 +58,16 @@ my_data |>
 
 ```{r}
 my_data |> 
-    filter(age_category == "IJ" | age_category == "young_adult") |> 
-  group_by(taxon) |> 
-#  slice_sample(n=10) |> 
-  summarise(Avg = mean(weight_g), n=n()) |> 
-  arrange(Avg) #Dont forget about weight at birth
-
-```
-
-```{r}
-my_data |> 
   filter(age_category == "IJ" | age_category == "young_adult") |> 
   group_by(taxon) |> 
   slice_sample(n = 27) |> 
   summarise(Avg = mean(weight_g)) |> 
   ggplot(aes(x=Avg, y= fct_reorder(taxon, Avg))) +
   geom_col()
+
 ```
+
+
 
 ```{r}
 my_data |> 
@@ -93,47 +89,37 @@ my_data |>
 # distinct(expected_gestation, .keep_all = TRUE) |> 
   arrange(expected_gestation)
 ```
+```{r}
+my_data |> 
+  filter(age_at_wt_y >= 2 & age_at_wt_y <=6) |> 
+  group_by(taxon) |> 
+  slice_sample(n = 14) |> 
+  summarise(Avg = mean(weight_g), n= n()) |> 
+  arrange(taxon)
+```
 
 ```{r}
-y <-  my_data |>
+x <- my_data |>
   filter(age_at_wt_d == 0) |>
   group_by(taxon) |> 
-  summarise(Avg_g = mean(expected_gestation), Avg_w = mean(weight_g), 
-            sc = mean(sire_age_at_concep_y)) |> 
-  arrange(taxon)
-```
+  summarise(Exp_Gestation = mean(expected_gestation), Avg_wgt_birth = mean(weight_g))
 
-```{r}
-x <- my_data |> 
-  filter(age_category == "IJ" | age_category == "young_adult") |> 
+y <-  my_data |> 
+  filter(age_at_wt_y >= 2 & age_at_wt_y <=6) |> 
   group_by(taxon) |> 
-  slice_sample(n = 27) |> 
-  summarise(Avg = mean(weight_g)) |> 
-  arrange(taxon)
-```
+  slice_sample(n = 14) |> 
+  summarise(Avg_wgt = mean(weight_g), n= n()) 
 
-```{r}
 #put all data frames into list
-text <- list(x,y)      
+texas = merge(x,y, by = "taxon")
 
-#merge all data frames together
-text |> reduce(full_join, by='taxon')
-```
 
-```{r}
-tex = merge(x,y, by='taxon')
-```
-
-```{r}
-tex
-```
-
-```{r}
-  tex |> 
-    ggplot(aes(Avg, Avg_w,label = taxon)) +
+  texas |> 
+    ggplot(aes(Avg_wgt_birth, Avg_wgt, label = taxon)) +
   geom_point() +
   geom_label()
 ```
+
 
 ```{r}
 my_data |> 
@@ -162,8 +148,9 @@ my_data |>
 
 ```{r}
 my_data |> 
-#filter((age_category == "IJ" | age_category == "young_adult") & (taxon %in% c("PCOQ", "VVV", "MMUR", "GMOH"))) |>
-  filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV", "MMUR", "GMOH"))) |> 
+  
+#filter((age_category == "IJ" | age_category == "young_adult") & (taxon %in% c("PCOQ", "VVV", "MMUR", "GMOH")))
+  filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))) |> 
   group_by(taxon) |> 
   slice_sample(n=14) |> 
   relocate(sex, age_at_wt_y, weight_g, .after = taxon) |> 
@@ -174,17 +161,7 @@ my_data |>
   
 ```
 
-```{r}
-my_data |> 
-    
-#filter((age_category == "IJ" | age_category == "young_adult") & (taxon %in% c("PCOQ", "VVV", "MMUR", "GMOH"))) |>
-  filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV"))) |> 
-  group_by(taxon) |> 
-  slice_sample(n=14) |> 
-  relocate(sex, age_at_wt_y, weight_g, .after = taxon)  |> 
-  ggplot(aes(x = taxon, y=weight_g, color = sex)) +
-  geom_boxplot()
-```
+
 
 ```{r}
 my_data |> 
