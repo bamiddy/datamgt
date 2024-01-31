@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Lemur Assignment</title>
+<title>Lemur data Visualization with Tidyverse</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -87,7 +87,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Lemur Assignment</h1>
+<h1 class="title">Lemur data Visualization with Tidyverse</h1>
 </div>
 
 
@@ -109,8 +109,8 @@ h1 {color:red;}
 h2 {color: green,}
 </style>
 </div>
-<section id="load-package-and-data.-the-data-has-been-cleaned" class="level1">
-<h1>Load Package and data. The data has been cleaned</h1>
+<section id="load-package-and-data.-the-data-has-been-cleaned" class="level2">
+<h2 class="anchored" data-anchor-id="load-package-and-data.-the-data-has-been-cleaned">Load Package and data. The data has been cleaned</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -118,7 +118,7 @@ h2 {color: green,}
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
 ✔ forcats   1.0.0     ✔ stringr   1.5.1
 ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
-✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.0
 ✔ purrr     1.0.2     
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
@@ -270,32 +270,32 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>texas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>   taxon Exp_Gestation Avg_wgt_birth    Avg_wgt  n
-1   CMED            62      13.64000  228.92857 14
-2   DMAD           165     103.07619 2510.35714 14
-3   ECOL           123      58.18571 2381.92857 14
-4   ECOR           124      54.24000 1524.78571 14
-5   EFLA           124      83.07600 2445.71429 14
-6   EFUL           120      73.00000 2539.50000 14
-7   EMAC           120      71.18000 2479.92857 14
-8   EMON           127      59.85000 1471.35714 14
-9   ERUB           120      81.58333 2054.82143 14
-10  ERUF           120      70.44667 2059.96429 14
-11   EUL           120      74.78571 2335.28571 14
-12  GMOH           124      12.66471  171.57143 14
-13   HGG           145      45.00000 1113.64286 14
-14  LCAT           138      62.20930 2330.50000 14
-15  LTAR           167      11.91111  182.21429 14
-16  MMUR            63       8.12500   79.35714 14
-17  MZAZ            90      16.60000  284.64286 14
-18  NCOU           193      49.30000 1236.64286 14
-19  NPYG           185      21.58200  531.85714 14
-20   OGG           129      48.49375 1068.06286 14
-21  PCOQ           160     104.11000 4026.78571 14
-22  PPOT           170      30.63333  841.00000 14
-23   VAR            98     112.00000 3405.71429 14
-24  VRUB           103     109.27778 3691.35714 14
-25   VVV           104     105.11786 3578.28571 14</code></pre>
+<pre><code>   taxon Exp_Gestation Avg_wgt_birth   Avg_wgt  n
+1   CMED            62      13.64000  237.6429 14
+2   DMAD           165     103.07619 2470.0000 14
+3   ECOL           123      58.18571 2422.4286 14
+4   ECOR           124      54.24000 1622.4286 14
+5   EFLA           124      83.07600 2309.2857 14
+6   EFUL           120      73.00000 2663.8214 14
+7   EMAC           120      71.18000 2454.3929 14
+8   EMON           127      59.85000 1533.6071 14
+9   ERUB           120      81.58333 2127.0000 14
+10  ERUF           120      70.44667 2035.8571 14
+11   EUL           120      74.78571 2105.6071 14
+12  GMOH           124      12.66471  180.3571 14
+13   HGG           145      45.00000  961.0714 14
+14  LCAT           138      62.20930 2338.0000 14
+15  LTAR           167      11.91111  183.1429 14
+16  MMUR            63       8.12500   77.0000 14
+17  MZAZ            90      16.60000  288.5714 14
+18  NCOU           193      49.30000 1244.2143 14
+19  NPYG           185      21.58200  536.0000 14
+20   OGG           129      48.49375 1084.0286 14
+21  PCOQ           160     104.11000 3706.4286 14
+22  PPOT           170      30.63333  855.6429 14
+23   VAR            98     112.00000 3393.5000 14
+24  VRUB           103     109.27778 3485.0714 14
+25   VVV           104     105.11786 3354.2143 14</code></pre>
 </div>
 </div>
 <p>Box-plot of Four lemur taxon showing weight distribution</p>

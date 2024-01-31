@@ -1,0 +1,31 @@
+{
+    "id": "AA109F1B",
+    "path": "~/rstudiodemo/docs/index.qmd",
+    "project_path": "docs/index.qmd",
+    "type": "quarto_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1706741004900.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "rmdVisualMode": "false",
+        "rmdVisualWrapConfigured": "true",
+        "source_window_id": "",
+        "Source": "Source",
+        "docOutlineVisible": "1",
+        "cursorPosition": "22,135",
+        "scrollLine": "15",
+        "rmdVisualModeLocation": "124:0",
+        "rmdVisualCollapsedChunks": ""
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1706742055,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1706742055876,
+    "read_only": false,
+    "read_only_alternatives": []
+}
