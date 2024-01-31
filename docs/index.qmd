@@ -1,10 +1,22 @@
 ---
 title: "Lemur Assignment"
-format: html
 editor: visual
+format: 
+  html:
+    theme: sandstone
+    toc: true
+    toc_float: true 
+
 ---
 
-## Load Package and data. The data has been cleaned
+```{css, echo = F}
+.column {display: flex}
+h1 {color:red;}
+h2 {color: green,}
+```
+
+
+# Load Package and data. The data has been cleaned
 
 ```{r}
 library(tidyverse)

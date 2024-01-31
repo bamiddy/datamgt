@@ -71,10 +71,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#load-package-and-data.-the-data-has-been-cleaned" id="toc-load-package-and-data.-the-data-has-been-cleaned" class="nav-link active" data-scroll-target="#load-package-and-data.-the-data-has-been-cleaned">Load Package and data. The data has been cleaned</a></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -94,8 +102,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </header>
 
-<section id="load-package-and-data.-the-data-has-been-cleaned" class="level2">
-<h2 class="anchored" data-anchor-id="load-package-and-data.-the-data-has-been-cleaned">Load Package and data. The data has been cleaned</h2>
+<div class="cell">
+<style type="text/css">
+.column {display: flex}
+h1 {color:red;}
+h2 {color: green,}
+</style>
+</div>
+<section id="load-package-and-data.-the-data-has-been-cleaned" class="level1">
+<h1>Load Package and data. The data has been cleaned</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -142,7 +157,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>       <span class="at">caption =</span> <span class="st">"Birth Type: captive-born (CB), wild-born (WB) and unknown (UNK)"</span>) <span class="sc">+</span></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_bar</span>() </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-2-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Let us restrict our search to those born at the Duke Lemur Center.</p>
@@ -163,7 +178,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">'loess'</span>, <span class="at">formula =</span> <span class="st">'y ~ x'</span>) <span class="sc">+</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>taxon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Scatter Plot Showing the weight distribution of four lemur taxon of age between 2-6 yrs</p>
@@ -179,7 +194,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">'loess'</span>, <span class="at">formula =</span> <span class="st">'y ~ x'</span>) <span class="sc">+</span></span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>taxon)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-5-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Density Plot Showing the weight distribution of four lemur taxon of weight less than 6000g and age between 2-6 yrs</p>
@@ -193,7 +208,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">xlab</span>(<span class="st">"Lm=emur Weight"</span>) <span class="sc">+</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">linewidth =</span> <span class="fl">0.75</span>, <span class="at">alpha=</span> <span class="fl">0.2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We Can Confirm the above plot using a bar plot and now selecting the taxon at certain age.</p>
@@ -208,7 +223,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Plot showing the Average weight across various lemur taxon between age 2-6 yrs"</span>) <span class="sc">+</span></span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>We Can Confirm the above plot using a bar plot and now selecting the taxon at certain categories.</p>
@@ -223,7 +238,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"Plot showing the average weight Of IJ and young adult Lemur in different taxon"</span>) <span class="sc">+</span></span>
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-8-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Age at birth also have a positive correlation with adult age/growth rate across lemur taxon</p>
@@ -249,38 +264,38 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_label</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-9-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-10-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>texas</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>   taxon Exp_Gestation Avg_wgt_birth    Avg_wgt  n
-1   CMED            62      13.64000  222.64286 14
-2   DMAD           165     103.07619 2281.78571 14
-3   ECOL           123      58.18571 2424.42857 14
-4   ECOR           124      54.24000 1609.00000 14
-5   EFLA           124      83.07600 2398.92857 14
-6   EFUL           120      73.00000 2722.21429 14
-7   EMAC           120      71.18000 2505.53571 14
-8   EMON           127      59.85000 1495.07143 14
-9   ERUB           120      81.58333 2070.82143 14
-10  ERUF           120      70.44667 1943.32143 14
-11   EUL           120      74.78571 2297.78571 14
-12  GMOH           124      12.66471  171.07143 14
-13   HGG           145      45.00000 1043.85714 14
-14  LCAT           138      62.20930 2380.78571 14
-15  LTAR           167      11.91111  186.14286 14
-16  MMUR            63       8.12500   82.64286 14
-17  MZAZ            90      16.60000  296.37857 14
-18  NCOU           193      49.30000 1269.64286 14
-19  NPYG           185      21.58200  575.71429 14
-20   OGG           129      48.49375 1098.64286 14
-21  PCOQ           160     104.11000 3836.78571 14
-22  PPOT           170      30.63333  808.21429 14
-23   VAR            98     112.00000 3383.00000 14
-24  VRUB           103     109.27778 3663.92857 14
-25   VVV           104     105.11786 3546.46429 14</code></pre>
+1   CMED            62      13.64000  228.92857 14
+2   DMAD           165     103.07619 2510.35714 14
+3   ECOL           123      58.18571 2381.92857 14
+4   ECOR           124      54.24000 1524.78571 14
+5   EFLA           124      83.07600 2445.71429 14
+6   EFUL           120      73.00000 2539.50000 14
+7   EMAC           120      71.18000 2479.92857 14
+8   EMON           127      59.85000 1471.35714 14
+9   ERUB           120      81.58333 2054.82143 14
+10  ERUF           120      70.44667 2059.96429 14
+11   EUL           120      74.78571 2335.28571 14
+12  GMOH           124      12.66471  171.57143 14
+13   HGG           145      45.00000 1113.64286 14
+14  LCAT           138      62.20930 2330.50000 14
+15  LTAR           167      11.91111  182.21429 14
+16  MMUR            63       8.12500   79.35714 14
+17  MZAZ            90      16.60000  284.64286 14
+18  NCOU           193      49.30000 1236.64286 14
+19  NPYG           185      21.58200  531.85714 14
+20   OGG           129      48.49375 1068.06286 14
+21  PCOQ           160     104.11000 4026.78571 14
+22  PPOT           170      30.63333  841.00000 14
+23   VAR            98     112.00000 3405.71429 14
+24  VRUB           103     109.27778 3691.35714 14
+25   VVV           104     105.11786 3578.28571 14</code></pre>
 </div>
 </div>
 <p>Box-plot of Four lemur taxon showing weight distribution</p>
@@ -295,7 +310,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> taxon, <span class="at">y=</span>weight_g)) <span class="sc">+</span></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-11-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
 </div>
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>  <span class="co">#select(taxon, sex, age_at_wt_d, weight_g) |&gt; </span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
@@ -306,7 +321,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> weight_g)) <span class="sc">+</span></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-12-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>Histogram of PCOQ weight_g Lemur Taxon</p>
@@ -317,7 +332,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> weight_g)) <span class="sc">+</span></span>
 <span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">120</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-13-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <p>VVV</p>
@@ -336,7 +351,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <pre><code>`geom_smooth()` using formula = 'y ~ x'</code></pre>
 </div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-14-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -346,7 +361,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span> weight_g, <span class="at">y =</span> dam_age_at_concep_y, <span class="at">color =</span>taxon)) <span class="sc">+</span></span>
 <span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-15-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">
@@ -359,7 +374,7 @@ date  (8): dob, estimated_concep, dam_dob, sire_dob, dod, weight_date, conce...
 <span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(No_of_offspring,Dam_minimum_age_at_conception)) <span class="sc">+</span></span>
 <span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output-display">
-<p><img src="index_files/figure-html/unnamed-chunk-16-1.png" class="img-fluid" width="672"></p>
+<p><img src="index_files/figure-html/unnamed-chunk-17-1.png" class="img-fluid" width="672"></p>
 </div>
 </div>
 <div class="cell">

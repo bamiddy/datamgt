@@ -1,0 +1,31 @@
+{
+    "id": "2A6EBDE2",
+    "path": "/cloud/project/Exp_task.qmd",
+    "project_path": "Exp_task.qmd",
+    "type": "quarto_markdown",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1706738060019.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "rmdVisualMode": "true",
+        "rmdVisualWrapConfigured": "true",
+        "source_window_id": "",
+        "Source": "Source",
+        "docOutlineVisible": "0",
+        "cursorPosition": "5,17",
+        "scrollLine": "0",
+        "rmdVisualModeLocation": "94:58",
+        "rmdVisualCollapsedChunks": ""
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1706725481,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1706725481,
+    "read_only": false,
+    "read_only_alternatives": []
+}
