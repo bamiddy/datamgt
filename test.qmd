@@ -156,5 +156,6 @@ use_git_config(use.name="", user.email="")
 ```
 
 ```{r}
-
+biostathandbook.com
+rcompanion.org
 ```
