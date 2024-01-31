@@ -1,0 +1,161 @@
+---
+title: "Test"
+format: html
+editor: visual
+---
+
+## Problem solved
+
+```{r}
+y = 5250
+n = 10000
+p = y/n 
+pp = 0.5
+
+z = (p-pp)/sqrt((pp*(1-pp)/n))
+```
+
+```{r}
+qnorm(0.99)
+```
+
+```{r}
+1-pnorm(1.58)
+```
+
+```{r}
+b = 0.5
+y = 0.3
+g = 0.2
+n = 100
+
+p = c(b, y, g)
+dogs = c(43, 33, 24)
+
+dmultinom(x= dogs, prob = p)
+```
+
+```{r}
+b = 0.5
+y = 0.3
+g = 0.2
+n = 100
+
+p = c(b, y, g)
+dogs = c(50, 30, 20)
+dmultinom(x= dogs, prob = p)
+```
+
+```{r}
+a = 0.15
+b = 0.83
+c = 0.02
+n = 3
+
+p = c(a, b, c)
+cows = c(0, 3, 0)
+p1 = dmultinom(x= cows, prob = p)
+
+p = c(a, b, c)
+cows = c(1, 1, 1)
+p2 = dmultinom(x= cows, prob = p)
+
+p1 + p2
+```
+
+```{r}
+curve(dchisq(x, df=2), from=0, to= 100)
+# The higher the df, the more the curve become normal distribution
+```
+
+```{r}
+x2 = (((20-15)^2)/15) + (((75-83)^2)/83) + (((5-2)^2)/2)
+x2
+qchisq(0.95, df=2)
+1 - pchisq(x2, df= 2)
+
+```
+
+```{r}
+null.probs <- c(0.15, 0.83, 0.02)
+observed <-  c(20, 75, 5)
+chisq.test(observed, p=null.probs)
+```
+
+```{r}
+Blind <- c(79, 40, 20, 25, 90, 50)
+sighted <- c(1231, 1322, 1420, 2421, 733, 2301)
+
+
+
+qchisq(0.95, df=5)
+x2 = ((79-34)^2/34) + ((79-34)^2/34) + ((79-34)^2/34) + ((79-34)^2/34) + 
+```
+
+```{r}
+Blind <- c(79, 40, 20, 25, 90, 50)
+sighted <- c(1231, 1322, 1420, 2421, 733, 2301)
+
+tab <-  rbind(Blind, sighted)
+chisq.test(tab) #i
+```
+
+```{r}
+obs  <- c(720, 260, 20)
+null.prob <- c(0.7744, 0.2112, 0.0144) #Prop proportion under hardy-weinberg equi
+
+chisq.test(obs, p= null.prob)
+
+
+```
+
+```{r}
+obs  <- c(720, 260, 20)
+null.prob <- c(0.81, 0.18, 0.01) #Prop proportion under hardy-weinberg equi
+
+chisq.test(obs, p= null.prob)
+
+cal_val= 55.556
+
+p_value = 1 - pchisq(55.556, df = 1) # The more df, the better
+```
+
+```{r}
+p_value
+```
+
+```{r}
+normal <- c(15, 50, 25)
+elev <- c(15, 10, 5)
+very_high <- c(30,40,10)
+
+gene <-  cbind(normal, elev, very_high)
+chisq.test(gene) # Pvalue is very low
+```
+
+```         
+Pearson's Chi-squared test
+```
+
+data: gene X-squared = 18.194, df = 4, p-value = 0.001131
+
+```{r}
+library(usethis)
+```
+
+```{r}
+create_github_token()
+```
+
+```{r}
+library(gitcreds)
+```
+
+```{r}
+use_git_config(use.name="", user.email="")
+```
+
+```{r}
+biostathandbook.com
+rcompanion.org
+```
