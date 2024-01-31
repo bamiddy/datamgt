@@ -17,13 +17,11 @@ My_data <-  readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 #  clean_names()
 ```
 
-```{r}
+
 ![LEMUR_IMAGE](lemur.jpeg)
-```
-
-
 
 Visualize the data distribution on Bar_Chart based on the basic class(taxon) And Distinct lemur.
+
 
 ```{r}
 My_data |> 
@@ -38,12 +36,12 @@ My_data |>
 
 Let us restrict our search to those born at the Duke Lemur Center.
 
+
 ```{r}
 my_data <- 
   My_data |>
   filter(birth_institution == "Duke Lemur Center")
 ```
-
 
 
 With random sampling of 100 Species of each taxon, let's view their growth rate. by plotting age to weigh_gain.(Scatter_Plot)
@@ -64,6 +62,7 @@ my_data |>
 
 Scatter Plot Showing the weight distribution of four lemur taxon of age between 2-6 yrs
 
+
 ```{r}
 my_data |> 
   filter(taxon %in% c("PCOQ", "VVV", "EMON", "OGG")) |> 
@@ -79,6 +78,7 @@ my_data |>
 
 
 Density Plot Showing the weight distribution of four lemur taxon of weight less than 6000g and age between 2-6 yrs
+
 
 ```{r}
 my_data |> 
@@ -128,6 +128,7 @@ my_data |>
 
 Age at birth also have a positive correlation with adult age/growth rate across lemur taxon
 
+
 ```{r}
 my_datas <- my_data |> 
   filter(weight_g != 0 & !(is.na(weight_g)))
@@ -157,8 +158,8 @@ texas
 ```
 
 
-
 Box-plot of Four lemur taxon showing weight distribution
+
 
 ```{r}
 my_data |> 
@@ -200,8 +201,8 @@ Histogram of PCOQ weight_g Lemur Taxon
 ```
 
 
-
 VVV
+
 
 ```{r, echo= TRUE}
 my_data |> 
@@ -230,8 +231,9 @@ my_data |>
   filter(sex == "F" & (age_category == "adult" ) & !is.na(n_known_offspring)) |> 
   group_by(taxon) |> 
   slice_sample(n = 10) |> 
-  summarise(x = sum(n_known_offspring),y = mean(r_min_dam_age_at_concep_y), n=n()) |> 
-  ggplot(aes(x,y)) +
+  summarise(No_of_offspring = sum(n_known_offspring),
+            Dam_minimum_age_at_conception = mean(r_min_dam_age_at_concep_y), n=n()) |> 
+  ggplot(aes(No_of_offspring,Dam_minimum_age_at_conception)) +
   geom_point()
 ```
 
