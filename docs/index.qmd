@@ -1,5 +1,6 @@
 ---
 title: "Lemur data Visualization with Tidyverse"
+subtitle: "APM: Data Mgt Project by Oluwatobi Bello"
 editor: visual
 format: 
   html:
@@ -11,21 +12,22 @@ format:
 
 ```{css, echo = F}
 .column {display: flex}
-h1 {color:brown;}
-/*h2 {color: green,}*/
+/*h1 {color:blue;}
+h2 {color: green,}*/
 ```
 ![Lemur (suborder Strepsirrhini),](lemur.jpeg)
 
 # Lemur
-### Why Study Lemur
+## Why Study Lemur
 Lemurs represent the most endangered category of mammals worldwide, with 95% of lemur species facing the threat of extinction. Our goal is to study everything about lemur, because the more we learn, the better we can work to save them from extinction.
 
-### Source of Data
+## Source of Data
 Lemur are endemic only to Madagascar, so once lemurs are gone from Madagascar, they are gone from the wild. This data was from the [DLC database](https://lemur.duke.edu/duke-lemur-center-database/). The Duke Lemur Center houses over 200 lemurs across 14 species – the most diverse population of lemurs on Earth, outside their native Madagascar.
 
 # Data Visualization
-### Import Data and Packages
-The data had been cleaned before importing, no need to import janitor. This Data contained 27 taxons in acronyms, visit the [tidytuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24/taxonomy.csv) lemur-page to check their meaning.
+
+## Import Data and Packages
+The data had been cleaned before importing, no need to import janitor. This Data contained 27 taxons in acronyms, In [tidytuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24/taxonomy.csv) lemur-page we can check their full meaning.
 
 ```{r}
 library(tidyverse)
@@ -36,7 +38,7 @@ My_data <-  readr::read_csv('https://raw.githubusercontent.com/rfordatascience/t
 ```
 
 
-#### Visualize the data distribution
+## Visualize the taxon distribution
 This Bar Chart reveal the proportion of various taxon in DLC.
 ```{r}
 My_data |> 
@@ -47,9 +49,9 @@ My_data |>
        caption = "Birth Type: captive-born (CB), wild-born (WB) and unknown (UNK)") +
   geom_bar() 
 ```
-From the above chart, it shown that we have some lemur from unknown source and from the wild. so, i would like to limit my study to those born in the DLC. 
+From the above chart, it shown that we have some lemur are from a unknown source and some from the wild. So, i would like to limit my study to those born in the DLC institution. 
 
-#### Lemur Born in the DLC
+## Lemur Born in the DLC
 Let us restrict our search to those born at the Duke Lemur Center, because they are subjected to the same treatment, nutrition and housing condition.
 ```{r}
 my_data <- 
@@ -57,7 +59,9 @@ my_data <-
   filter(birth_institution == "Duke Lemur Center")
 ```
 
-#### Growth rate of the lemur taxon
+# Growth rate
+
+## Growth rate of the lemur taxon
 With random sampling of 100 Species of each taxon, let's view their growth rate. By plotting age to weight
 ```{r}
 my_data |> 
@@ -74,7 +78,7 @@ my_data |>
 From the above plot, we noticed that there is variation in growth rate across the lemur taxon and only two taxons are hybrids. 
 
 
-#### The Growth rate of four lemur taxon
+## The Growth rate of four lemur taxon
 ```{r}
 my_data |> 
   filter(taxon %in% c("PCOQ", "VVV", "EMON", "OGG")) |> 
@@ -91,7 +95,9 @@ The above scatter plot reveal that there is no significant difference between fe
 
 
 
-#### Weight distribution of four lemur taxon of weight less than 6000g and age between 2-6 yrs
+## Weight distribution
+Weight distribution of four lemur taxon of weight less than 6000g and age between 2-6 yrs
+
 ```{r}
 my_data |> 
   filter(weight_g <= 6000) |> 
@@ -103,11 +109,15 @@ my_data |>
   geom_density(linewidth = 0.75, alpha= 0.2)
   
 ```
-The above weight distribution shows the differences in the average weight and variance across the taxons and how each distribution deviate from the normal distribution.  
+The above weight distributions show the differences in the average weight and variance across the taxons and how each distribution deviate from the normal distribution.  
 
 
-The above plot can be well represented on box-plot to show the median, percentile, Outliers and also deviation from normality. 
-Box-plot of Four lemur taxon showing weight distribution
+
+
+
+### Box-plot 
+
+The above plot can be well represented on a box-plot to show the median, percentile, Outliers and also the deviation from normality. 
 ```{r}
 my_data |> 
   
@@ -125,7 +135,7 @@ The Weight of PCOQ and VVV are significantly different(higher) compare to EMON a
 
 
 
-#### Average weight across of various lemur taxon.
+### Average weight across of various lemur taxon.
 ```{r}
 my_data |> 
     filter(age_at_wt_y >= 2 & age_at_wt_y <=6) |> 
@@ -137,11 +147,12 @@ my_data |>
        title = "The Average weight across various lemur taxon between age 2-6 yrs") +
   geom_col()
 ```
-In order for each taxon to be well represented, i have randomly sampled equal number of lemur from each taxon and at a certain stage of growth(age between 2 and 6 years). After running the code several times some categories (PCOQ, VRUB, VAR and VVV) remain at the top weight, while some remain at the bottom (MMUR, GMOH,LTAR, CMED). To show exact differences in average weight between two taxon we have to do hypothesis testing and some factors have to be considered to limit the errors. such as age, gender, breeds and nutrition among others.  
+In order for each taxon to be well represented, I have randomly sampled equal number of lemur from each taxon and at a certain stage of growth (age between 2 and 6 years). After running the code at several times, some categories (PCOQ, VRUB, VAR and VVV) remain at the top weight, while some remain at the bottom (MMUR, GMOH, LTAR, CMED). To show exact differences in average weight between two taxon we have to do hypothesis testing and some factors have to be considered to limit the errors. such as age, gender, breeds and nutrition among others.  
 
 
 
-We have almost the same result when we filter with age categories .
+#### I observed almost the same result when I filter with age categories.
+
 ```{r}
 my_data |> 
   filter(age_category == "young_adult") |> 
@@ -155,8 +166,28 @@ my_data |>
 
  
 ```
-#### Correlation among trait
 
+## Rate of growth at different age categories
+
+I filter one lemur taxon VVV (*Varecia variegata variegata*) to examine the age categories where lemur exibit fastest growth rate.
+```{r}
+my_data |> 
+  filter(taxon == "VVV") |> 
+  ggplot(aes(x= age_at_wt_d, y = weight_g,
+             color = age_category, fill = age_category
+            )) +
+  geom_point(shape = 22, stroke = 0) +
+  ylab("Lemur Weigth") +
+  geom_smooth(aes(color = age_category), method = "loess", formula = 'y ~ x') +
+  scale_color_manual(values = c("lightblue3", "blue", "yellow")) +
+  scale_fill_manual(values = c("black", "red", "brown"))
+```
+
+From the above result, we can deduced that growth rate was rapid at the juvenile stage, was slower at the young adult stage and become constant at the adult stage
+
+# Correlation among trait
+
+#### Relationship between birth weight and adult weight
 I intend to see if there is any factors that contribute to the differences in lemur average adult weight across the taxon.
 ```{r}
 my_datas <- my_data |> 
@@ -178,73 +209,53 @@ texas = merge(x,y, by = "taxon")
   texas |> 
     ggplot(aes(Avg_wgt_birth, Avg_wgt, label = taxon)) +
   labs(x = "Average weight at birth (g)", y = "Adult average weight (g)", 
-       title = "Relationship between Birth Weight and Adult weight across the lemur taxon") +
+       title = "Relationship between birth weight and adult weight across the lemur taxon") +
   geom_point() +
   geom_label()
 ```
-The above plot shows that there is a positive correlation between the weight at birth and adult weight across lemur taxon. For this we deduce that birth weight affect growth rate and contribute to adult weight. It would be more reasonable to examine this relationship in just a single taxon.
+The above plot shows that there is a positive correlation between the weight at birth and adult weight across lemur taxon. For this we can deduce that birth weight affect growth rate and contribute to adult weight. It would be more reasonable to examine this relationship in just a single taxon.
 
 
-
-I intend to examine if there is relationship between dam age at conception and weight at birth in a single taxon (PCOQ)
+### Relationship between dam age at conception and weight at birth
+I intend to examine if there is relationship between dam age at conception and weight at birth in a single taxon PCOQ (*Propithecus coquereli*)
 ```{r}
 my_data |> 
   filter(age_at_wt_d == 0 & taxon == "PCOQ") |> 
   select(taxon, age_at_wt_d, weight_g, dam_age_at_concep_y) |> 
   ggplot(aes(x= weight_g, y = dam_age_at_concep_y, color =taxon)) +
-  labs(x = "weight at birth (g)", y = "dam age at conception (days)", 
+  labs(x = "weight at birth (g)", y = "dam age at conception (years)", 
        title = "Relationship between dam age at conception and weight at birth of lemur") +
   geom_point()
 ```
-The above plot show no relationship between dam age at conception and weight at birth. I have the same result in other lemur taxon.
+The above plot shows no relationship between dam age at conception and weight at birth. I have the same result in other lemur taxon.
 
+### Relationship between dam age at conception and No of offspring
 
-I intend to examine if there is relationship between Dam_minimum_age_at_conception and No_of_offspring birthed.
+I intend to examine if there is relationship between Dam age at conception and No of offspring the dam has delivered.
 ```{r}
 my_data |> 
-  filter(sex == "F" & (age_category == "adult" ) & !is.na(n_known_offspring)) |> 
-  group_by(taxon) |> 
-  slice_sample(n = 10) |> 
-  summarise(No_of_offspring = sum(n_known_offspring),
-            Dam_minimum_age_at_conception = mean(r_min_dam_age_at_concep_y), n=n()) |> 
-  ggplot(aes(No_of_offspring,Dam_minimum_age_at_conception)) +
-   labs(x = "No of offspring", y = "dam minimum age at conception (days)", 
+   filter(!is.na(n_known_offspring), taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))  |>
+  
+   ggplot(aes(x= dam_age_at_concep_y, y = n_known_offspring, color = taxon)) +
+   labs(x = "No of offspring", y = "dam age at conception (days)", 
        title = "Relationship between dam minimum age at conception and No of offspring") +
   geom_point()
 ```
-The above plot show no relationship between Dam minimum age at conception and No of offspring.
+The above plot show no relationship between Dam age at conception and No of offspring the dam has delivered.
 
-```{r}
-my_data |> 
-  filter(taxon == "VVV") |> 
-  ggplot(aes(x= age_at_wt_d, y = weight_g,
-             color = age_category, fill = age_category
-            )) +
-  geom_point(shape = 22, stroke = 0) +
-  ylab("Lemur Weigth") +
-  geom_smooth(aes(color = age_category), method = "loess", formula = 'y ~ x') +
-  scale_color_manual(values = c("lightblue3", "black", "yellow")) +
-  scale_fill_manual(values = c("black", "red", "brown"))
-```
+### Weight distribution with Histogram
 
-Histogram of MMUR weight_g Lemur Taxon
+The Weight distribution of *Eulemur mongoz* (EMON), one of the lemur taxon.
+
 ```{r}
 
 my_data |> 
-    filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & taxon == "MMUR") |> 
+    filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & taxon == "EMON") |> 
   ggplot(aes(x = weight_g)) +
+  xlab("Weight (g)") +
   geom_histogram(bins = 30)
 ```
 
-Histogram of PCOQ weight_g Lemur Taxon
-
-```{r}
- my_data |> 
-    #filter(age_category == "young_adult" & taxon == "PCOQ") |> 
-    filter((age_at_wt_y >= 2 & age_at_wt_y <=3) & taxon == "PCOQ") |> 
-  ggplot(aes(x = weight_g)) +
-  geom_histogram(binwidth = 120)
-```
 
 
 
