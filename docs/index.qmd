@@ -55,7 +55,7 @@ My_data |>
   geom_bar() 
 ```
 
-From the above chart, it shown that we have some lemur are from a unknown source and some from the wild. So, i would like to limit my study to those born in the DLC institution.
+From the above chart, it was shown that some lemur are from an unknown source and some from the wild. So, i would like to limit my study to those born in the DLC institution.
 
 ## Lemur Born in the DLC
 
