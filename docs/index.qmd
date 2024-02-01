@@ -8,26 +8,36 @@ format:
     toc_float: true 
 ---
 
+
 ```{css, echo = F}
 .column {display: flex}
-h1 {color:red;}
-h2 {color: green,}
+h1 {color:brown;}
+/*h2 {color: green,}*/
 ```
+![Lemur (suborder Strepsirrhini),](lemur.jpeg)
 
-## Load Package and data. 
-The data had been cleaned before importing, no need to import janitor
+# Lemur
+### Why Study Lemur
+Lemurs represent the most endangered category of mammals worldwide, with 95% of lemur species facing the threat of extinction. Our goal is to study everything about lemur, because the more we learn, the better we can work to save them from extinction.
+
+### Source of Data
+Lemur are endemic only to Madagascar, so once lemurs are gone from Madagascar, they are gone from the wild. This data was from the [DLC database](https://lemur.duke.edu/duke-lemur-center-database/). The Duke Lemur Center houses over 200 lemurs across 14 species – the most diverse population of lemurs on Earth, outside their native Madagascar.
+
+# Data Visualization
+### Import Data and Packages
+The data had been cleaned before importing, no need to import janitor. This Data contained 27 taxons in acronyms, visit the [tidytuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24/taxonomy.csv) lemur-page to check their meaning.
+
 ```{r}
 library(tidyverse)
 #library(janitor)
 
 My_data <-  readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-08-24/lemur_data.csv')
 
-
 ```
 
-![The lemur](lemur.jpeg)
 
-Visualize the data distribution on Bar_Chart based on the basic class(taxon) And Distinct lemur.
+#### Visualize the data distribution
+This Bar Chart reveal the proportion of various taxon in DLC.
 ```{r}
 My_data |> 
   distinct(dlc_id, .keep_all = TRUE) |> 
@@ -37,46 +47,51 @@ My_data |>
        caption = "Birth Type: captive-born (CB), wild-born (WB) and unknown (UNK)") +
   geom_bar() 
 ```
+From the above chart, it shown that we have some lemur from unknown source and from the wild. so, i would like to limit my study to those born in the DLC. 
 
-Let us restrict our search to those born at the Duke Lemur Center.
-
+#### Lemur Born in the DLC
+Let us restrict our search to those born at the Duke Lemur Center, because they are subjected to the same treatment, nutrition and housing condition.
 ```{r}
 my_data <- 
   My_data |>
   filter(birth_institution == "Duke Lemur Center")
 ```
 
-With random sampling of 100 Species of each taxon, let's view their growth rate. by plotting age to weigh_gain.(Scatter_Plot)
-
+#### Growth rate of the lemur taxon
+With random sampling of 100 Species of each taxon, let's view their growth rate. By plotting age to weight
 ```{r}
 my_data |> 
   group_by(taxon) |> 
   sample_n(100) |> 
   ggplot(aes(x= age_at_wt_d, y= weight_g)) +
   geom_point(aes(color = hybrid)) +
-  labs(x = "Age at weight", y = "Lemur Weight", 
-       title = "Plots showing the rate of growth across various lemur taxon") +
+  labs(x = "Age at weight (days)", y = "Lemur Weight (g)", 
+       title = "The rate of growth across various lemur taxon",
+       caption = "Hybrid: Not hybrid(N), Hybrid species (Sp)") +
   geom_smooth(method = 'loess', formula = 'y ~ x') +
   facet_wrap(~taxon)
 ```
+From the above plot, we noticed that there is variation in growth rate across the lemur taxon and only two taxons are hybrids. 
 
-Scatter Plot Showing the weight distribution of four lemur taxon of age between 2-6 yrs
 
+#### The Growth rate of four lemur taxon
 ```{r}
 my_data |> 
   filter(taxon %in% c("PCOQ", "VVV", "EMON", "OGG")) |> 
   group_by(taxon) |> 
   sample_n(100) |> 
   ggplot(aes(x= age_at_wt_d, y= weight_g)) +
-  geom_point(aes(color = hybrid)) +
-  labs(x = "Age at weight", y = "Lemur Weight", 
-       title = "Plots showing the rate of growth across various lemur taxon") +
+  geom_point(aes(color = sex)) +
+  labs(x = "Age at weight (days)", y = "Lemur Weight (g)", 
+       title = "The rate of growth across various lemur taxon") +
   geom_smooth(method = 'loess', formula = 'y ~ x') +
   facet_wrap(~taxon)
 ```
+The above scatter plot reveal that there is no significant difference between female and male growth rate. Although, we can carry out statistical test to clarify this hypothesis.
 
-Density Plot Showing the weight distribution of four lemur taxon of weight less than 6000g and age between 2-6 yrs
 
+
+#### Weight distribution of four lemur taxon of weight less than 6000g and age between 2-6 yrs
 ```{r}
 my_data |> 
   filter(weight_g <= 6000) |> 
@@ -84,13 +99,33 @@ my_data |>
   filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))) |> 
   group_by(taxon) |> 
   ggplot(aes(x = weight_g, color = taxon, fill= taxon)) +
-  xlab("Lm=emur Weight") +
+  labs(x = "Weight (g)", title = "Weight distribution of four lemur taxon") +
   geom_density(linewidth = 0.75, alpha= 0.2)
   
 ```
+The above weight distribution shows the differences in the average weight and variance across the taxons and how each distribution deviate from the normal distribution.  
 
-We Can Confirm the above plot using a bar plot and now selecting the taxon at certain age.
 
+The above plot can be well represented on box-plot to show the median, percentile, Outliers and also deviation from normality. 
+Box-plot of Four lemur taxon showing weight distribution
+```{r}
+my_data |> 
+  
+#filter((age_category == "IJ" | age_category == "young_adult") & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG")))
+  filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))) |> 
+  group_by(taxon) |> 
+  slice_sample(n=14) |> 
+  relocate(sex, age_at_wt_y, weight_g, .after = taxon) |> 
+  ggplot(aes(x = taxon, y=weight_g)) +
+  labs(x = "Weight (g)", title = "Weight distribution of four lemur taxon") +
+  geom_boxplot()
+  
+```
+The Weight of PCOQ and VVV are significantly different(higher) compare to EMON and OGG.
+
+
+
+#### Average weight across of various lemur taxon.
 ```{r}
 my_data |> 
     filter(age_at_wt_y >= 2 & age_at_wt_y <=6) |> 
@@ -98,28 +133,31 @@ my_data |>
   slice_sample(n=14) |> 
   summarise(Avg = mean(weight_g), n=n()) |> 
   ggplot(aes(x=Avg, y= fct_reorder(taxon, Avg))) +
-   labs(x = "Average weight", y = "Lemur Taxon", 
-       title = "Plot showing the Average weight across various lemur taxon between age 2-6 yrs") +
+   labs(x = "Average weight (g)", y = "Lemur Taxon", 
+       title = "The Average weight across various lemur taxon between age 2-6 yrs") +
   geom_col()
 ```
+In order for each taxon to be well represented, i have randomly sampled equal number of lemur from each taxon and at a certain stage of growth(age between 2 and 6 years). After running the code several times some categories (PCOQ, VRUB, VAR and VVV) remain at the top weight, while some remain at the bottom (MMUR, GMOH,LTAR, CMED). To show exact differences in average weight between two taxon we have to do hypothesis testing and some factors have to be considered to limit the errors. such as age, gender, breeds and nutrition among others.  
 
-We Can Confirm the above plot using a bar plot and now selecting the taxon at certain categories.
 
+
+We have almost the same result when we filter with age categories .
 ```{r}
 my_data |> 
-  filter(age_category == "IJ" | age_category == "young_adult") |> 
+  filter(age_category == "young_adult") |> 
   group_by(taxon) |> 
-  slice_sample(n = 27) |> 
-  summarise(Avg = mean(weight_g)) |> 
-  ggplot(aes(x=Avg, y= fct_reorder(taxon, Avg))) +
-   labs(x = "Average weight", y = "Lemur Taxon", 
-       title = "Plot showing the average weight Of IJ and young adult Lemur in different taxon") +
+  slice_sample(n = 10) |> 
+  summarise(Avg = mean(weight_g), n = n()) |> 
+   ggplot(aes(x=Avg, y= fct_reorder(taxon, Avg))) +
+   labs(x = "Average weight (g)", y = "Lemur Taxon", 
+       title = "The average weight Of young adult Lemur in different taxon") +
   geom_col()
 
+ 
 ```
+#### Correlation among trait
 
-Age at birth also have a positive correlation with adult age/growth rate across lemur taxon
-
+I intend to see if there is any factors that contribute to the differences in lemur average adult weight across the taxon.
 ```{r}
 my_datas <- my_data |> 
   filter(weight_g != 0 & !(is.na(weight_g)))
@@ -139,34 +177,57 @@ texas = merge(x,y, by = "taxon")
 
   texas |> 
     ggplot(aes(Avg_wgt_birth, Avg_wgt, label = taxon)) +
+  labs(x = "Average weight at birth (g)", y = "Adult average weight (g)", 
+       title = "Relationship between Birth Weight and Adult weight across the lemur taxon") +
   geom_point() +
   geom_label()
 ```
+The above plot shows that there is a positive correlation between the weight at birth and adult weight across lemur taxon. For this we deduce that birth weight affect growth rate and contribute to adult weight. It would be more reasonable to examine this relationship in just a single taxon.
 
+
+
+I intend to examine if there is relationship between dam age at conception and weight at birth in a single taxon (PCOQ)
 ```{r}
-texas
-
+my_data |> 
+  filter(age_at_wt_d == 0 & taxon == "PCOQ") |> 
+  select(taxon, age_at_wt_d, weight_g, dam_age_at_concep_y) |> 
+  ggplot(aes(x= weight_g, y = dam_age_at_concep_y, color =taxon)) +
+  labs(x = "weight at birth (g)", y = "dam age at conception (days)", 
+       title = "Relationship between dam age at conception and weight at birth of lemur") +
+  geom_point()
 ```
+The above plot show no relationship between dam age at conception and weight at birth. I have the same result in other lemur taxon.
 
-Box-plot of Four lemur taxon showing weight distribution
+
+I intend to examine if there is relationship between Dam_minimum_age_at_conception and No_of_offspring birthed.
+```{r}
+my_data |> 
+  filter(sex == "F" & (age_category == "adult" ) & !is.na(n_known_offspring)) |> 
+  group_by(taxon) |> 
+  slice_sample(n = 10) |> 
+  summarise(No_of_offspring = sum(n_known_offspring),
+            Dam_minimum_age_at_conception = mean(r_min_dam_age_at_concep_y), n=n()) |> 
+  ggplot(aes(No_of_offspring,Dam_minimum_age_at_conception)) +
+   labs(x = "No of offspring", y = "dam minimum age at conception (days)", 
+       title = "Relationship between dam minimum age at conception and No of offspring") +
+  geom_point()
+```
+The above plot show no relationship between Dam minimum age at conception and No of offspring.
 
 ```{r}
 my_data |> 
-  
-#filter((age_category == "IJ" | age_category == "young_adult") & (taxon %in% c("PCOQ", "VVV", "MMUR", "GMOH")))
-  filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))) |> 
-  group_by(taxon) |> 
-  slice_sample(n=14) |> 
-  relocate(sex, age_at_wt_y, weight_g, .after = taxon) |> 
-  ggplot(aes(x = taxon, y=weight_g)) +
-  geom_boxplot()
-  
-  #select(taxon, sex, age_at_wt_d, weight_g) |> 
-  
+  filter(taxon == "VVV") |> 
+  ggplot(aes(x= age_at_wt_d, y = weight_g,
+             color = age_category, fill = age_category
+            )) +
+  geom_point(shape = 22, stroke = 0) +
+  ylab("Lemur Weigth") +
+  geom_smooth(aes(color = age_category), method = "loess", formula = 'y ~ x') +
+  scale_color_manual(values = c("lightblue3", "black", "yellow")) +
+  scale_fill_manual(values = c("black", "red", "brown"))
 ```
 
 Histogram of MMUR weight_g Lemur Taxon
-
 ```{r}
 
 my_data |> 
@@ -185,50 +246,6 @@ Histogram of PCOQ weight_g Lemur Taxon
   geom_histogram(binwidth = 120)
 ```
 
-VVV
 
-```{r, echo= TRUE}
-my_data |> 
-  filter(taxon == "VVV") |> 
-  ggplot(aes(x= age_at_wt_d, y = weight_g,
-             color = age_category, fill = age_category
-            )) +
-  geom_point(shape = 22, stroke = 0) +
-  ylab("Lemur Weigth") +
-  geom_smooth(aes(color = age_category), method = "loess") +
-  scale_color_manual(values = c("lightblue3", "black", "yellow")) +
-  scale_fill_manual(values = c("black", "red", "brown"))
-  
-```
 
-```{r}
-my_data |> 
-  filter(age_at_wt_d == 0 & taxon == "PCOQ") |> 
-  select(taxon, age_at_wt_d, weight_g, dam_age_at_concep_y) |> 
-  ggplot(aes(x= weight_g, y = dam_age_at_concep_y, color =taxon)) +
-  geom_point()
-```
 
-```{r}
-my_data |> 
-  filter(sex == "F" & (age_category == "adult" ) & !is.na(n_known_offspring)) |> 
-  group_by(taxon) |> 
-  slice_sample(n = 10) |> 
-  summarise(No_of_offspring = sum(n_known_offspring),
-            Dam_minimum_age_at_conception = mean(r_min_dam_age_at_concep_y), n=n()) |> 
-  ggplot(aes(No_of_offspring,Dam_minimum_age_at_conception)) +
-  geom_point()
-```
-
-```{r}
-my_data |> 
-  group_by(taxon) |> 
-  slice_head(n = 2) |> 
-  relocate(r_min_dam_age_at_concep_y, .before = dlc_id)
-```
-
-```{r}
-my_data %>% 
-  filter(taxon == "PCOQ") %>% 
-  select(taxon, age_at_wt_d, weight_g)
-```
