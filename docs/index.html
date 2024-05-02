@@ -327,43 +327,31 @@ $ stado    &lt;chr&gt; "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O
 <div class="sourceCode cell-code" id="cb28"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># sort by animal</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>file_1 <span class="sc">|&gt;</span> </span>
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(animal) <span class="sc">|&gt;</span> </span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          animal             ID lac12 lac_wk.   yearwk   yearmo DIM ch4clean
-1 PL005074104005 PL005074104005     2      32 2016--05 2016--02 225 544.6091
-2 PL005074104005 PL005074104005     2      32 2016--05 2016--02 227 511.5992
-3 PL005074104005 PL005074104005     2      32 2016--06 2016--02 229 469.3059
-4 PL005074104005 PL005074104005     2      33 2016--06 2016--02 231 382.0683
-5 PL005074104005 PL005074104005     2      33 2016--06 2016--02 232 510.4705
-6 PL005074104005 PL005074104005     2      33 2016--06 2016--02 234 440.4794
-     dfpcm dlw lw100. ch4100    rch4 stado
-1 27.22845 698   6.98 5.4461 54.4609     O
-2 25.00349 758   7.58 5.1160 51.1599     O
-3 26.10594 713   7.13 4.6931 46.9306     O
-4 22.93273 701   7.01 3.8207 38.2068     O
-5 23.18778 698   6.98 5.1047 51.0470     O
-6 23.51511 720   7.20 4.4048 44.0479     O</code></pre>
+<pre><code>          animal             ID lac12 lac_wk.
+1 PL005074104005 PL005074104005     2      32
+2 PL005074104005 PL005074104005     2      32
+3 PL005074104005 PL005074104005     2      32
+4 PL005074104005 PL005074104005     2      33
+5 PL005074104005 PL005074104005     2      33
+6 PL005074104005 PL005074104005     2      33</code></pre>
 </div>
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb30"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>NewFile <span class="sc">|&gt;</span> </span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(animal) <span class="sc">|&gt;</span> </span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>          animal             ID lac12 lac_wk.   yearwk   yearmo DIM ch4clean
-1 PL005227672382 PL005227672382     1       9 2016--22 2016--06  63 377.9107
-2 PL005227672382 PL005227672382     1       9 2016--23 2016--06  68 358.5687
-3 PL005227672382 PL005227672382     1      11 2016--25 2016--06  80 392.9043
-4 PL005227672382 PL005227672382     1      11 2016--25 2016--06  81 437.9096
-5 PL005227672382 PL005227672382     1      11 2016--25 2016--06  82 410.8117
-6 PL005227672382 PL005227672382     1      12 2016--25 2016--06  84 377.9756
-     dfpcm
-1 22.86621
-2 25.53328
-3 28.28385
-4 29.52990
-5 28.93930
-6 24.46333</code></pre>
+<pre><code>          animal             ID lac12 lac_wk.
+1 PL005227672382 PL005227672382     1       9
+2 PL005227672382 PL005227672382     1       9
+3 PL005227672382 PL005227672382     1      11
+4 PL005227672382 PL005227672382     1      11
+5 PL005227672382 PL005227672382     1      11
+6 PL005227672382 PL005227672382     1      12</code></pre>
 </div>
 </div>
 </section>

@@ -161,6 +161,7 @@ Although from the normal view of the data, we might not know that there are more
 # sort by animal
 file_1 |> 
   arrange(animal) |> 
+  select(1:4) |> 
   head()
 
 
@@ -169,6 +170,7 @@ file_1 |>
 ```{r}
 NewFile |> 
   arrange(animal) |> 
+  select(1:4) |> 
   head()
 ```
 
