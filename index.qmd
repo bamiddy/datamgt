@@ -1,0 +1,322 @@
+---
+title: "Assignment: Working with real data"
+subtitle: "Task Completed using R"
+editor: visual
+format: 
+  html:
+    toc: true
+    toc_float: true
+---
+
+## Loading the data and naming the Column
+
+I need to import the text file to be read by R. The first and Second data, when i view the data i noticed it is separated by space(" "). I discovered the original data is not having a column name, so i have to give them a name for easy analysis
+
+First Data
+
+```{r}
+column1 <- c("animal", "ID", "lac12", "lac_wk ", "yearwk", "yearmo", "DIM",
+             "ch4clean", "dfpcm", "dlw", "lw100 ", "ch4100", "rch4", "stado")
+
+# I specify the column name since the original data does not contain the header.
+file_1 <-  read.delim("ch4.daily.joint.dat.b", sep = " ", col.names = column1)
+```
+
+Second Data
+
+```{r}
+column2 <- c("animal", "Sire", "Dam")
+
+# I specify the column name since the original data does not contain the header.
+file_2 <- read.table("ThePED.txt.b", col.names = column2)
+```
+
+### Loading useful Library
+
+I am employing tidyverse to prove my work and it is also easy to use because it has inbuilt packages like dplyr and ggplot
+
+```{r}
+library(tidyverse)
+```
+
+Take a glimpse at the data, to see the shape and Datatypes
+
+```{r}
+glimpse(file_1)
+# This presented me the number of row and column, and the data types of each variables i am dealing with.
+```
+
+I Check for any missing value at the ID/ANIMAL/INDEX i.e the first column if there is missing ID, It has to be handled before analysis
+
+```{r}
+# Checking for na or Zero(0)
+a <- file_1 |> 
+  filter((is.na(animal)) | animal == 0) |> 
+  nrow()
+
+b <- file_2 |> 
+   subset((is.na(animal)) | animal == 0) |> 
+  nrow()
+
+#For Confirmation
+c <- file_1 |> 
+  filter(!(is.na(animal)) & animal != 0) |> 
+  nrow()
+
+d <- file_2 |> 
+   subset(!(is.na(animal)) & animal != 0) |> 
+  nrow()
+# I need to know if any index are missing data, which will not be relevant for the study.
+
+paste("The first data has",a,"missing values of animal, while the second file has",b,"missing values of animal")
+paste("The first data has",c," records of animal, while the second file has",d,"records of animal")
+```
+
+# TASK ONE
+
+### From file 1 select records from the 1st lactation, drop the last 5 columns
+
+Using the inbuilt r_package
+
+```{r}
+# I need to know the number of lactation recorder. we have only two, and no missing value... so the sum made up the whole records.
+file_1 |> 
+  count(lac12)
+```
+
+```{r}
+# I use subset to filter the first lactation.
+NewFile <- subset(file_1, lac12 == 1) 
+
+# I slice out the whole column while substracting the last 5. I used the no.of column to avoid error. ncol
+NewFile <- NewFile[1:(ncol(NewFile)-5)]
+
+
+y = names(NewFile)
+n = ncol(NewFile)
+
+p <- NewFile |> 
+  filter(lac12 == 2) |> 
+  nrow()
+
+paste("The new data has no second lactation, i.e",p)
+paste("we now have dataframe with",n,"column. And these are:")
+print(y)
+```
+
+*How many records you got in the new file*
+
+```{r}
+dim(NewFile)
+cat("The number of row is", nrow(NewFile),"and the number of columns are", ncol(NewFile),".This was confirmed from the table above")
+```
+
+### How many animals were in the file 1 and how many is in the new file?
+
+The ID represent each animal. So to avoid error in counting, we need to avoid duplicate. i can use count function or tidyverse to see if there is duplicate
+
+```{r}
+# Using inbuilt r pacakge to view duplicates in File1
+mes = file_1 |> 
+  count(animal)
+
+# Using tidyverse to view duplicates in NewFile
+pres = NewFile |> 
+  group_by(animal) |> 
+  summarise(n = n())
+
+nmes <-  mes |> 
+  filter(n>1) |> 
+  nrow()
+
+npres <-  pres |> 
+  filter(n>1) |> 
+  nrow()
+
+paste("The File_1(Original file) has ",nmes,"duplicate. and The Newfile has ",npres,"duplicate.")
+
+```
+
+Because There are presence of duplicate *in Animal ID* then we should use a distinct records.
+
+```{r}
+unique_File1Animal <- 
+  file_1 |> 
+  distinct(ID) |> 
+  nrow()
+
+unique_NewFileAnimal <- 
+  NewFile |> 
+  count(ID) |> 
+  nrow()
+
+paste("The number of animal in File_1 are", unique_File1Animal, "while the number of animal in NewFile are", unique_NewFileAnimal)
+```
+
+*methods/steps you applied to verify the result*
+
+Although from the normal view of the data, we might not know that there are more than one records for an animal but we can prove that by sorting the data.
+
+```{r}
+# sort by animal
+file_1 |> 
+  arrange(animal) |> 
+  select(1:4) |> 
+  head(5)
+
+
+```
+
+```{r}
+NewFile |> 
+  arrange(animal) |> 
+  select(1:4) |> 
+  head(5)
+```
+
+# TASK TWO
+
+### Basic distribution parameters of ch4clean
+
+```{r}
+# Let take a brief view on the distribution
+Methane_Emission <-  file_1$ch4clean
+hist(Methane_Emission)
+
+# From this we can make some assumption on the distribution.
+```
+
+I should check the integrity of the varaible such as missing values which might affect the result of the parameter e.g mean.
+
+```{r}
+file_1 |> 
+  filter(!(is.numeric(ch4clean)) |  (is.na(ch4clean)) | ch4clean == 0)
+```
+
+Basic distribution parameters
+
+```{r}
+methane <-  file_1$ch4clean
+avg <- mean(methane)
+varia <- var(methane)
+std = sd(methane)
+
+
+Range = max(methane) - min(methane)
+quat = quantile(methane)
+l = length(methane)
+
+cat("The mean of the distribution is ",avg,", The range of the distribution is ",Range,",the variance is ",varia,"while the Standard deviation is", std)
+
+```
+
+```{r}
+# This is the quatile, while the 50% represent the median of the distribution. 0% represent the min and 100% the max
+print(quat)
+```
+
+# TASK THREE
+
+### Average ch4clean for each DIM
+
+```{r}
+Data <- 
+  file_1 |> 
+  group_by(DIM) |> 
+  summarise(AvgCH4 = mean(ch4clean), Count = n())
+
+# The average methane is in the middle column(AvgCH4)
+print(head(Data, 8))
+```
+
+For Confirmation the total number still equate to the nrow of the original data set. it means all the data was captured.
+
+```{r}
+sum(Data$Count)
+```
+
+Simple plot showing relationship between DIM and average methane emission.
+
+```{r}
+Data |> 
+  ggplot(aes(x = DIM, y = AvgCH4)) +
+  geom_point() +
+  labs(title = "The Methane Emission Across The Days from Calving", 
+       x = "Days in Milk", y = "Average Methane Emission")
+```
+
+# TASK FOUR
+
+### Combine the file 1 obtained in the step 1/ with the file 2 based on the ID.
+
+This is performed using merge or column binding. i bind them by the animal column. which is the same as the ID.
+
+```{r}
+Data2 = merge(NewFile, file_2, by = "animal")
+head(Data2)
+```
+
+I can view the new two new column with its values
+
+```{r}
+glimpse(Data2)
+```
+
+# TASK FIVE
+
+### How many records is in the new file?
+
+```{r}
+dim(Data2)
+paste("The new file has",nrow(Data2),"datapoints with each having",ncol(Data2),"variables")
+```
+
+### Did you find sire and dam for each animal? How many animals has unknown sire? How many animals has unknown dam?
+
+```{r}
+
+x <- Data2 |> 
+  subset((Sire != 0) & (Dam != 0) ) |> 
+  distinct(animal) |> 
+  nrow()
+
+y <- Data2 |> 
+  filter((Sire == 0) & (Dam == 0) ) |> 
+  count(animal) |>
+  nrow()
+  
+z  <- Data2 |> 
+  filter((Sire == 0) & (Dam != 0)) |> 
+  group_by(animal) |> 
+  slice_head() |> 
+  nrow()
+
+w  <- Data2 |> 
+  filter((Sire != 0) & (Dam == 0)) |> 
+  group_by(animal) |> 
+  slice_sample() |> 
+  nrow()
+
+paste(x,"Animals have both Sire and Dam recorded,",y,"Animals have Missing Values for both Sire and Dam,",z,"Animal have unknown Sire while ",w,"Animals have unkwown Dam")
+```
+
+```{r}
+#For confirmation The Combine data have 269 distinct ID i.e animals with no Nan. And the sum of the above result is 269
+sum(!is.na(Data2$animal))
+sum(is.na(Data2$animal))
+nrow(count(Data2, ID))
+```
+
+# Last Task
+
+Attached files obtained in the step 1/ and 4/
+
+```{r}
+# File from step 1
+write.csv(NewFile, file = "step1.csv")
+```
+
+```{r}
+# File from step 1
+write.csv(Data2, file = "step4.csv")
+```
