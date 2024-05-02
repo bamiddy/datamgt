@@ -1,273 +1,313 @@
 ---
-title: "Lemur data Visualization with Tidyverse"
-subtitle: "APM: Data Mgt Project by Oluwatobi Bello"
+title: "working with real data"
+format: html
 editor: visual
-format: 
-  html:
-    theme: sandstone
-    toc: true
-    toc_float: true 
 ---
 
-```{css, echo = F}
-.column {display: flex}
-/*h1 {color:blue;}
-h2 {color: green,}*/
+## Loading the data and naming the Column
+
+I need to import the text file to be read by R. The first and Second data, when i view the data i noticed it is separated by space(" "). I discovered the original data is not having a column name, so i have to give them a name for easy analysis
+
+First Data
+
+```{r}
+column1 <- c("animal", "ID", "lac12", "lac_wk ", "yearwk", "yearmo", "DIM",
+             "ch4clean", "dfpcm", "dlw", "lw100 ", "ch4100", "rch4", "stado")
+
+# I specify the column name since the original data does not contain the header.
+file_1 <-  read.delim("ch4.daily.joint.dat.b", sep = " ", col.names = column1)
 ```
 
-![Lemur (suborder Strepsirrhini),](lemur.jpeg)
+Second Data
 
-# Lemur
+```{r}
+column2 <- c("animal", "Sire", "Dam")
 
-## Why Study Lemur
+# I specify the column name since the original data does not contain the header.
+file_2 <- read.table("ThePED.txt.b", col.names = column2)
+```
 
-Lemurs represent the most endangered category of mammals worldwide, with 95% of lemur species facing the threat of extinction. Our goal is to study everything about lemur, because the more we learn, the better we can work to save them from extinction.
-
-## Source of Data
-
-Lemur are endemic only to Madagascar, so once lemurs are gone from Madagascar, they are gone from the wild. This data was from the [DLC database](https://lemur.duke.edu/duke-lemur-center-database/). The Duke Lemur Center houses over 200 lemurs across 14 species -- the most diverse population of lemurs on Earth, outside their native Madagascar.
-
-# Data Visualization
-
-## Import Data and Packages
-
-The data had been cleaned before importing, no need to import janitor. This Data contained 27 taxons in acronyms, In [tidytuesday](https://github.com/rfordatascience/tidytuesday/blob/master/data/2021/2021-08-24/taxonomy.csv) lemur-page we can check their full meaning.
+Loading useful Library I am employing tidyverse to prove my work and it is also easy to use because it has inbuilt packages like dplyr and ggplot
 
 ```{r}
 library(tidyverse)
-#library(janitor)
+```
 
-My_data <-  readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-08-24/lemur_data.csv')
+Take a glimpse at the data, to see the shape and Datatypes
+
+```{r}
+glimpse(file_1)
+# This presented me the number of row and column, and the data types of each variables i am dealing with.
+```
+
+Check for any missing value at the ID/ANIMAL/INDEX i.e the first column if there is missing ID, It has to be handled before analysis
+
+```{r}
+# Checking for na or Zero(0)
+a <- file_1 |> 
+  filter((is.na(animal)) | animal == 0) |> 
+  nrow()
+
+b <- file_2 |> 
+   subset((is.na(animal)) | animal == 0) |> 
+  nrow()
+
+#For Confirmation
+c <- file_1 |> 
+  filter(!(is.na(animal)) & animal != 0) |> 
+  nrow()
+
+d <- file_2 |> 
+   subset(!(is.na(animal)) & animal != 0) |> 
+  nrow()
+# I need to know if any index are missing data, which will not be relevant for the study.
+
+paste("The first data has",a,"missing values of animal, while the second file has",b,"missing values of animal")
+paste("The first data has",c," records of animal, while the second file has",d,"records of animal")
+```
+
+#Excercise 1
+
+###From file 1 select records from the 1st lactation, drop the last 5 columns
+
+Using the inbuilt r_package
+
+```{r}
+# I need to know the number of lactation recorder. we have only two, and no missing value... so the sum made up the whole records.
+file_1 |> 
+  count(lac12)
+```
+
+```{r}
+# I use subset to filter the first lactation.
+NewFile <- subset(file_1, lac12 == 1) 
+
+# I slice out the whole column while substracting the last 5. I used the no.of column to avoid error. ncol
+NewFile <- NewFile[1:(ncol(NewFile)-5)]
+
+
+y = names(NewFile)
+n = ncol(NewFile)
+
+p <- NewFile |> 
+  filter(lac12 == 2) |> 
+  nrow()
+
+paste("The new data has no second lactation, i.e",p)
+paste("we now have dataframe with",n,"column. And these are:")
+print(y)
+```
+
+*How many records you got in the new file*
+
+```{r}
+dim(NewFile)
+cat("The number of row is", nrow(NewFile),"and the number of columns are", ncol(NewFile),".This was confirmed from the table above")
+```
+
+### How many animals were in the file 1 and how many is in the new file?
+
+The ID represent each animal. So to avoid error in counting, we need to avoid duplicate. i can use count function or tidyverse to see if there is duplicate
+
+```{r}
+# Using inbuilt r pacakge to view duplicates in File1
+mes = file_1 |> 
+  count(animal)
+
+# Using tidyverse to view duplicates in NewFile
+pres = NewFile |> 
+  group_by(animal) |> 
+  summarise(n = n())
+
+nmes <-  mes |> 
+  filter(n>1) |> 
+  nrow()
+
+npres <-  pres |> 
+  filter(n>1) |> 
+  nrow()
+
+paste("The File_1(Original file) has ",nmes,"duplicate. and The Newfile has ",npres,"duplicate.")
 
 ```
 
-## Visualize the taxon distribution
-
-This Bar Chart reveal the proportion of various taxon in DLC.
+Because There are presence of duplicate *in Animal ID* then we should use a distinct records.
 
 ```{r}
-My_data |> 
-  distinct(dlc_id, .keep_all = TRUE) |> 
-  ggplot(aes(y=fct_infreq(taxon), fill=birth_type)) +
-  labs(y = "Taxon of lemur", x = "Lemur taxon Count", 
-       title = "Distribution of lemur taxon showing the type of birth",
-       caption = "Birth Type: captive-born (CB), wild-born (WB) and unknown (UNK)") +
-  geom_bar() 
+unique_File1Animal <- 
+  file_1 |> 
+  distinct(ID) |> 
+  nrow()
+
+unique_NewFileAnimal <- 
+  NewFile |> 
+  count(ID) |> 
+  nrow()
+
+paste("The number of animal in File_1 are", unique_File1Animal, "while the number of animal in NewFile are", unique_NewFileAnimal)
 ```
 
-From the above chart, it was shown that some lemur are from an unknown source and some from the wild. So, i would like to limit my study to those born in the DLC institution.
+*methods/steps you applied to verify the result*
 
-## Lemur Born in the DLC
-
-Let us restrict our search to those born at the Duke Lemur Center, because they are subjected to the same treatment, nutrition and housing condition.
+Although from the normal view of the data, we might not know that there are more than one records for an animal but we can prove that by sorting the data.
 
 ```{r}
-my_data <- 
-  My_data |>
-  filter(birth_institution == "Duke Lemur Center")
+# sort by animal
+file_1 |> 
+  arrange(animal) |> 
+  head()
+
+
 ```
 
-# Growth rate
-
-## Growth rate of the lemur taxon
-
-With random sampling of 100 Species of each taxon, let's view their growth rate. By plotting age to weight
-
 ```{r}
-my_data |> 
-  group_by(taxon) |> 
-  sample_n(100) |> 
-  ggplot(aes(x= age_at_wt_d, y= weight_g)) +
-  geom_point(aes(color = hybrid)) +
-  labs(x = "Age at weight (days)", y = "Lemur Weight (g)", 
-       title = "The rate of growth across various lemur taxon",
-       caption = "Hybrid: Not hybrid(N), Hybrid species (Sp)") +
-  geom_smooth(method = 'loess', formula = 'y ~ x') +
-  facet_wrap(~taxon)
+NewFile |> 
+  arrange(animal) |> 
+  head()
 ```
 
-From the above plot, we noticed that there is variation in growth rate across the lemur taxon and only two taxons are hybrids.
+#EXCERCISE TWO
 
-## The Growth rate of four lemur taxon
+### Basic distribution parameters of ch4clean
 
 ```{r}
-my_data |> 
-  filter(taxon %in% c("PCOQ", "VVV", "EMON", "OGG")) |> 
-  group_by(taxon) |> 
-  sample_n(100) |> 
-  ggplot(aes(x= age_at_wt_d, y= weight_g)) +
-  geom_point(aes(color = sex)) +
-  labs(x = "Age at weight (days)", y = "Lemur Weight (g)", 
-       title = "The rate of growth across various lemur taxon") +
-  geom_smooth(method = 'loess', formula = 'y ~ x') +
-  facet_wrap(~taxon)
+# Let take a brief view on the distribution
+Methane_Emission <-  file_1$ch4clean
+hist(Methane_Emission)
+
+# From this we can make some assumption on the distribution.
 ```
 
-The above scatter plot reveal that there is no significant difference between female and male growth rate. Although, we can carry out statistical test to clarify this hypothesis.
-
-## Weight distribution
-
-Weight distribution of four lemur taxon of weight less than 6000g and age between 2-6 yrs
+I should check the integrity of the varaible such as missing values which might affect the result of the parameter e.g mean.
 
 ```{r}
-my_data |> 
-  filter(weight_g <= 6000) |> 
-#filter((age_category == "IJ" | age_category == "young_adult") & (taxon %in% c("PCOQ", "VVV", "MMUR", "GMOH")))
-  filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))) |> 
-  group_by(taxon) |> 
-  ggplot(aes(x = weight_g, color = taxon, fill= taxon)) +
-  labs(x = "Weight (g)", title = "Weight distribution of four lemur taxon") +
-  geom_density(linewidth = 0.75, alpha= 0.2)
-  
+file_1 |> 
+  filter(!(is.numeric(ch4clean)) |  (is.na(ch4clean)) | ch4clean == 0)
 ```
 
-The above weight distributions show the differences in the average weight and variance across the taxons and how each distribution deviate from the normal distribution.
-
-### Box-plot
-
-The above plot can be well represented on a box-plot to show the median, percentile, Outliers and also the deviation from normality.
+Basic distribution parameters
 
 ```{r}
-my_data |> 
-  
-#filter((age_category == "IJ" | age_category == "young_adult") & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG")))
-  filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & (taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))) |> 
-  group_by(taxon) |> 
-  slice_sample(n=14) |> 
-  relocate(sex, age_at_wt_y, weight_g, .after = taxon) |> 
-  ggplot(aes(x = taxon, y=weight_g)) +
-  labs(x = "Weight (g)", title = "Weight distribution of four lemur taxon") +
-  geom_boxplot()
-  
+methane <-  file_1$ch4clean
+avg <- mean(methane)
+varia <- var(methane)
+std = sd(methane)
+
+
+Range = max(methane) - min(methane)
+quat = quantile(methane)
+l = length(methane)
+
+cat("The mean of the distribution is ",avg,", The range of the distribution is ",Range,",the variance is ",varia,"while the Standard deviation is", std)
+
 ```
 
-The Weight of PCOQ and VVV are significantly different(higher) compare to EMON and OGG.
-
-### Average weight across of various lemur taxon.
-
 ```{r}
-my_data |> 
-    filter(age_at_wt_y >= 2 & age_at_wt_y <=6) |> 
-  group_by(taxon) |> 
-  slice_sample(n=14) |> 
-  summarise(Avg = mean(weight_g), n=n()) |> 
-  ggplot(aes(x=Avg, y= fct_reorder(taxon, Avg))) +
-   labs(x = "Average weight (g)", y = "Lemur Taxon", 
-       title = "The Average weight across various lemur taxon between age 2-6 yrs") +
-  geom_col()
+# This is the quatile, while the 50% represent the median of the distribution. 0% represent the min and 100% the max
+print(quat)
 ```
 
-In order for each taxon to be well represented, I have randomly sampled equal number of lemur from each taxon and at a certain stage of growth (age between 2 and 6 years). After running the code at several times, some categories (PCOQ, VRUB, VAR and VVV) remain at the top weight, while some remain at the bottom (MMUR, GMOH, LTAR, CMED). To show exact differences in average weight between two taxon we have to do hypothesis testing and some factors have to be considered to limit the errors. such as age, gender, breeds and nutrition among others.
+#EXCERCISE THREE
 
-#### I observed almost the same result when I filter with age categories.
+### Average ch4clean for each DIM
 
 ```{r}
-my_data |> 
-  filter(age_category == "young_adult") |> 
-  group_by(taxon) |> 
-  slice_sample(n = 10) |> 
-  summarise(Avg = mean(weight_g), n = n()) |> 
-   ggplot(aes(x=Avg, y= fct_reorder(taxon, Avg))) +
-   labs(x = "Average weight (g)", y = "Lemur Taxon", 
-       title = "The average weight Of young adult Lemur in different taxon") +
-  geom_col()
+Data <- 
+  file_1 |> 
+  group_by(DIM) |> 
+  summarise(AvgCH4 = mean(ch4clean), Count = n())
 
- 
+# The average methane is in the middle column(AvgCH4)
+print(head(Data, 8))
 ```
 
-## Rate of growth at different age categories
-
-I filter one lemur taxon VVV (*Varecia variegata variegata*) to examine the age categories where lemur exibit fastest growth rate.
+For Confirmation the total number still equate to the nrow of the original data set. it means all the data was captured.
 
 ```{r}
-my_data |> 
-  filter(taxon == "VVV") |> 
-  ggplot(aes(x= age_at_wt_d, y = weight_g,
-             color = age_category, fill = age_category
-            )) +
-  geom_point(shape = 22, stroke = 0) +
-  ylab("Lemur Weigth") +
-  geom_smooth(aes(color = age_category), method = "loess", formula = 'y ~ x') +
-  scale_color_manual(values = c("lightblue3", "blue", "yellow")) +
-  scale_fill_manual(values = c("black", "red", "brown"))
+sum(Data$Count)
 ```
 
-From the above result, we can deduced that growth rate was rapid at the juvenile stage, was slower at the young adult stage and become constant at the adult stage
-
-# Correlation among trait
-
-#### Relationship between birth weight and adult weight
-
-I intend to see if there is any factors that contribute to the differences in lemur average adult weight across the taxon.
+Simple plot showing relationship between DIM and average methane emission.
 
 ```{r}
-my_datas <- my_data |> 
-  filter(weight_g != 0 & !(is.na(weight_g)))
-x <- my_datas |>
-  filter(age_at_wt_d == 0) |>
-  group_by(taxon) |> 
-  summarise(Exp_Gestation = mean(expected_gestation), Avg_wgt_birth = mean(weight_g))
-
-y <-  my_datas |> 
-  filter(age_at_wt_y >= 2 & age_at_wt_y <=6) |> 
-  group_by(taxon) |> 
-  slice_sample(n = 14) |> 
-  summarise(Avg_wgt = mean(weight_g), n= n()) 
-
-#put all data frames into list
-texas = merge(x,y, by = "taxon")
-
-  texas |> 
-    ggplot(aes(Avg_wgt_birth, Avg_wgt, label = taxon)) +
-  labs(x = "Average weight at birth (g)", y = "Adult average weight (g)", 
-       title = "Relationship between birth weight and adult weight across the lemur taxon") +
+Data |> 
+  ggplot(aes(x = DIM, y = AvgCH4)) +
   geom_point() +
-  geom_label()
+  labs(title = "The Methane Emission Across The Days from Calving", 
+       x = "Days in Milk", y = "Average Methane Emission")
 ```
 
-The above plot shows that there is a positive correlation between the weight at birth and adult weight across lemur taxon. For this we can deduce that birth weight affect growth rate and contribute to adult weight. It would be more reasonable to examine this relationship in just a single taxon.
+#EXCERCISE FOUR
 
-### Relationship between dam age at conception and weight at birth
-
-I intend to examine if there is relationship between dam age at conception and weight at birth in a single taxon PCOQ (*Propithecus coquereli*)
+##Combine the file 1 obtained in the step 1/ with the file 2 based on the ID. This is performed using merge or column binding. i bind them by the animal column. which is the same as the ID.
 
 ```{r}
-my_data |> 
-  filter(age_at_wt_d == 0 & taxon == "PCOQ") |> 
-  select(taxon, age_at_wt_d, weight_g, dam_age_at_concep_y) |> 
-  ggplot(aes(x= weight_g, y = dam_age_at_concep_y, color =taxon)) +
-  labs(x = "weight at birth (g)", y = "dam age at conception (years)", 
-       title = "Relationship between dam age at conception and weight at birth of lemur") +
-  geom_point()
+Data2 = merge(NewFile, file_2, by = "animal")
+head(Data2)
 ```
 
-The above plot shows no relationship between dam age at conception and weight at birth. I have the same result in other lemur taxon.
-
-### Relationship between dam age at conception and No of offspring
-
-I intend to examine if there is relationship between Dam age at conception and No of offspring the dam has delivered.
+I can view the new two new column with its values
 
 ```{r}
-my_data |> 
-   filter(!is.na(n_known_offspring), taxon %in% c("PCOQ", "VVV", "EMON", "OGG"))  |>
+glimpse(Data2)
+```
+
+
+#EXCERCISE FIVE
+
+### How many records is in the new file?
+
+```{r}
+dim(Data2)
+paste("The new file has",nrow(Data2),"datapoints with each having",ncol(Data2),"variables")
+```
+
+### Did you find sire and dam for each animal? How many animals has unknown sire? How many animals has unknown dam?
+
+```{r}
+
+x <- Data2 |> 
+  subset((Sire != 0) & (Dam != 0) ) |> 
+  distinct(animal) |> 
+  nrow()
+
+y <- Data2 |> 
+  filter((Sire == 0) & (Dam == 0) ) |> 
+  count(animal) |>
+  nrow()
   
-   ggplot(aes(x= dam_age_at_concep_y, y = n_known_offspring, color = taxon)) +
-   labs(x = "No of offspring", y = "dam age at conception (days)", 
-       title = "Relationship between dam minimum age at conception and No of offspring") +
-  geom_point()
+z  <- Data2 |> 
+  filter((Sire == 0) & (Dam != 0)) |> 
+  group_by(animal) |> 
+  slice_head() |> 
+  nrow()
+
+w  <- Data2 |> 
+  filter((Sire != 0) & (Dam == 0)) |> 
+  group_by(animal) |> 
+  slice_sample() |> 
+  nrow()
+
+paste(x,"Animals have both Sire and Dam recorded,",y,"Animals have Missing Values for both Sire and Dam,",z,"Animal have unknown Sire while ",w,"Animals have unkwown Dam")
 ```
 
-The above plot show no relationship between Dam age at conception and No of offspring the dam has delivered.
+```{r}
+#For confirmation The Combine data have 269 distinct ID i.e animals with no Nan. And the sum of the above result is 269
+sum(!is.na(Data2$animal))
+sum(is.na(Data2$animal))
+nrow(count(Data2, ID))
+```
 
-### Weight distribution with Histogram
+# Last Task
 
-The Weight distribution of *Eulemur mongoz* (EMON), one of the lemur taxon.
+Attached files obtained in the step 1/ and 4/
 
 ```{r}
+# File from step 1
+write.csv(NewFile, file = "step1.csv")
+```
 
-my_data |> 
-    filter((age_at_wt_y >= 2 & age_at_wt_y <=6) & taxon == "EMON") |> 
-  ggplot(aes(x = weight_g)) +
-  xlab("Weight (g)") +
-  geom_histogram(bins = 30)
+```{r}
+# File from step 1
+write.csv(Data2, file = "step4.csv")
 ```

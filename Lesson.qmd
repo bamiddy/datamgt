@@ -1,0 +1,75 @@
+---
+title: "Lesson"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(palmerpenguins)
+```
+
+```{r}
+glimpse(penguins)
+```
+```{r}
+penguins |> 
+  ggplot(aes(x= flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(col = species, shape = species)) +
+  geom_smooth(method = "lm")+
+  labs(x = "Flipper Lenght(mm)", y = "Body mass(g)",
+       title = "Body mass and flipper length", subtitle = "Dimension for Adile, Chinstrap and Gentoo")
+```
+
+
+
+```{r}
+ggplot(
+  data = penguins,
+  mapping = aes(x = flipper_length_mm, y = body_mass_g)
+) +
+  geom_point() +
+  geom_smooth()
+
+ggplot() +
+  geom_point(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  ) +
+  geom_smooth(
+    data = penguins,
+    mapping = aes(x = flipper_length_mm, y = body_mass_g)
+  )
+```
+
+
+```{r}
+penguins |> 
+  ggplot(aes(x= fct_infreq(species))) +
+  geom_bar()
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
