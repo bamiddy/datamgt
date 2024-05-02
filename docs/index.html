@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>working with real data</title>
+<title>Assignment: Working with real data</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -71,15 +71,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#loading-the-data-and-naming-the-column" id="toc-loading-the-data-and-naming-the-column" class="nav-link active" data-scroll-target="#loading-the-data-and-naming-the-column">Loading the data and naming the Column</a>
+  <ul class="collapse">
+  <li><a href="#loading-useful-library" id="toc-loading-useful-library" class="nav-link" data-scroll-target="#loading-useful-library">Loading useful Library</a></li>
+  </ul></li>
+  <li><a href="#task-one" id="toc-task-one" class="nav-link" data-scroll-target="#task-one">TASK ONE</a>
+  <ul class="collapse">
+  <li><a href="#from-file-1-select-records-from-the-1st-lactation-drop-the-last-5-columns" id="toc-from-file-1-select-records-from-the-1st-lactation-drop-the-last-5-columns" class="nav-link" data-scroll-target="#from-file-1-select-records-from-the-1st-lactation-drop-the-last-5-columns">From file 1 select records from the 1st lactation, drop the last 5 columns</a></li>
+  <li><a href="#how-many-animals-were-in-the-file-1-and-how-many-is-in-the-new-file" id="toc-how-many-animals-were-in-the-file-1-and-how-many-is-in-the-new-file" class="nav-link" data-scroll-target="#how-many-animals-were-in-the-file-1-and-how-many-is-in-the-new-file">How many animals were in the file 1 and how many is in the new file?</a></li>
+  </ul></li>
+  <li><a href="#task-two" id="toc-task-two" class="nav-link" data-scroll-target="#task-two">TASK TWO</a>
+  <ul class="collapse">
+  <li><a href="#basic-distribution-parameters-of-ch4clean" id="toc-basic-distribution-parameters-of-ch4clean" class="nav-link" data-scroll-target="#basic-distribution-parameters-of-ch4clean">Basic distribution parameters of ch4clean</a></li>
+  </ul></li>
+  <li><a href="#task-three" id="toc-task-three" class="nav-link" data-scroll-target="#task-three">TASK THREE</a>
+  <ul class="collapse">
+  <li><a href="#average-ch4clean-for-each-dim" id="toc-average-ch4clean-for-each-dim" class="nav-link" data-scroll-target="#average-ch4clean-for-each-dim">Average ch4clean for each DIM</a></li>
+  </ul></li>
+  <li><a href="#task-four" id="toc-task-four" class="nav-link" data-scroll-target="#task-four">TASK FOUR</a>
+  <ul class="collapse">
+  <li><a href="#combine-the-file-1-obtained-in-the-step-1-with-the-file-2-based-on-the-id.-this-is-performed-using-merge-or-column-binding.-i-bind-them-by-the-animal-column.-which-is-the-same-as-the-id." id="toc-combine-the-file-1-obtained-in-the-step-1-with-the-file-2-based-on-the-id.-this-is-performed-using-merge-or-column-binding.-i-bind-them-by-the-animal-column.-which-is-the-same-as-the-id." class="nav-link" data-scroll-target="#combine-the-file-1-obtained-in-the-step-1-with-the-file-2-based-on-the-id.-this-is-performed-using-merge-or-column-binding.-i-bind-them-by-the-animal-column.-which-is-the-same-as-the-id.">Combine the file 1 obtained in the step 1/ with the file 2 based on the ID. This is performed using merge or column binding. i bind them by the animal column. which is the same as the ID.</a></li>
+  </ul></li>
+  <li><a href="#task-five" id="toc-task-five" class="nav-link" data-scroll-target="#task-five">TASK FIVE</a>
+  <ul class="collapse">
+  <li><a href="#how-many-records-is-in-the-new-file" id="toc-how-many-records-is-in-the-new-file" class="nav-link" data-scroll-target="#how-many-records-is-in-the-new-file">How many records is in the new file?</a></li>
+  <li><a href="#did-you-find-sire-and-dam-for-each-animal-how-many-animals-has-unknown-sire-how-many-animals-has-unknown-dam" id="toc-did-you-find-sire-and-dam-for-each-animal-how-many-animals-has-unknown-sire-how-many-animals-has-unknown-dam" class="nav-link" data-scroll-target="#did-you-find-sire-and-dam-for-each-animal-how-many-animals-has-unknown-sire-how-many-animals-has-unknown-dam">Did you find sire and dam for each animal? How many animals has unknown sire? How many animals has unknown dam?</a></li>
+  </ul></li>
+  <li><a href="#last-task" id="toc-last-task" class="nav-link" data-scroll-target="#last-task">Last Task</a></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">working with real data</h1>
+<h1 class="title">Assignment: Working with real data</h1>
+<p class="subtitle lead">Task Completed using R</p>
 </div>
 
 
@@ -114,7 +149,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># I specify the column name since the original data does not contain the header.</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>file_2 <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"ThePED.txt.b"</span>, <span class="at">col.names =</span> column2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Loading useful Library I am employing tidyverse to prove my work and it is also easy to use because it has inbuilt packages like dplyr and ggplot</p>
+<section id="loading-useful-library" class="level3">
+<h3 class="anchored" data-anchor-id="loading-useful-library">Loading useful Library</h3>
+<p>I am employing tidyverse to prove my work and it is also easy to use because it has inbuilt packages like dplyr and ggplot</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -153,7 +190,7 @@ $ stado    &lt;chr&gt; "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O
 </div>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This presented me the number of row and column, and the data types of each variables i am dealing with.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Check for any missing value at the ID/ANIMAL/INDEX i.e the first column if there is missing ID, It has to be handled before analysis</p>
+<p>I Check for any missing value at the ID/ANIMAL/INDEX i.e the first column if there is missing ID, It has to be handled before analysis</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking for na or Zero(0)</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>a <span class="ot">&lt;-</span> file_1 <span class="sc">|&gt;</span> </span>
@@ -183,8 +220,12 @@ $ stado    &lt;chr&gt; "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O
 <pre><code>[1] "The first data has 19676  records of animal, while the second file has 5776 records of animal"</code></pre>
 </div>
 </div>
-<p>#Excercise 1</p>
-<p>###From file 1 select records from the 1st lactation, drop the last 5 columns</p>
+</section>
+</section>
+<section id="task-one" class="level1">
+<h1>TASK ONE</h1>
+<section id="from-file-1-select-records-from-the-1st-lactation-drop-the-last-5-columns" class="level3">
+<h3 class="anchored" data-anchor-id="from-file-1-select-records-from-the-1st-lactation-drop-the-last-5-columns">From file 1 select records from the 1st lactation, drop the last 5 columns</h3>
 <p>Using the inbuilt r_package</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># I need to know the number of lactation recorder. we have only two, and no missing value... so the sum made up the whole records.</span></span>
@@ -236,6 +277,7 @@ $ stado    &lt;chr&gt; "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O
 <pre><code>The number of row is 11989 and the number of columns are 9 .This was confirmed from the table above</code></pre>
 </div>
 </div>
+</section>
 <section id="how-many-animals-were-in-the-file-1-and-how-many-is-in-the-new-file" class="level3">
 <h3 class="anchored" data-anchor-id="how-many-animals-were-in-the-file-1-and-how-many-is-in-the-new-file">How many animals were in the file 1 and how many is in the new file?</h3>
 <p>The ID represent each animal. So to avoid error in counting, we need to avoid duplicate. i can use count function or tidyverse to see if there is duplicate</p>
@@ -324,8 +366,10 @@ $ stado    &lt;chr&gt; "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O
 6 24.46333</code></pre>
 </div>
 </div>
-<p>#EXCERCISE TWO</p>
 </section>
+</section>
+<section id="task-two" class="level1">
+<h1>TASK TWO</h1>
 <section id="basic-distribution-parameters-of-ch4clean" class="level3">
 <h3 class="anchored" data-anchor-id="basic-distribution-parameters-of-ch4clean">Basic distribution parameters of ch4clean</h3>
 <div class="cell">
@@ -376,8 +420,10 @@ $ stado    &lt;chr&gt; "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O
  20.57484 363.34040 422.58417 485.88336 931.42460 </code></pre>
 </div>
 </div>
-<p>#EXCERCISE THREE</p>
 </section>
+</section>
+<section id="task-three" class="level1">
+<h1>TASK THREE</h1>
 <section id="average-ch4clean-for-each-dim" class="level3">
 <h3 class="anchored" data-anchor-id="average-ch4clean-for-each-dim">Average ch4clean for each DIM</h3>
 <div class="cell">
@@ -424,8 +470,12 @@ $ stado    &lt;chr&gt; "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O", "O
 </div>
 </div>
 </div>
-<p>#EXCERCISE FOUR</p>
-<p>##Combine the file 1 obtained in the step 1/ with the file 2 based on the ID. This is performed using merge or column binding. i bind them by the animal column. which is the same as the ID.</p>
+</section>
+</section>
+<section id="task-four" class="level1">
+<h1>TASK FOUR</h1>
+<section id="combine-the-file-1-obtained-in-the-step-1-with-the-file-2-based-on-the-id.-this-is-performed-using-merge-or-column-binding.-i-bind-them-by-the-animal-column.-which-is-the-same-as-the-id." class="level3">
+<h3 class="anchored" data-anchor-id="combine-the-file-1-obtained-in-the-step-1-with-the-file-2-based-on-the-id.-this-is-performed-using-merge-or-column-binding.-i-bind-them-by-the-animal-column.-which-is-the-same-as-the-id.">Combine the file 1 obtained in the step 1/ with the file 2 based on the ID. This is performed using merge or column binding. i bind them by the animal column. which is the same as the ID.</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb45"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a>Data2 <span class="ot">=</span> <span class="fu">merge</span>(NewFile, file_2, <span class="at">by =</span> <span class="st">"animal"</span>)</span>
 <span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(Data2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -465,8 +515,10 @@ $ Sire     &lt;chr&gt; "FR4460978633", "FR4460978633", "FR4460978633", "FR446097
 $ Dam      &lt;chr&gt; "PL005291246311", "PL005291246311", "PL005291246311", "PL0052…</code></pre>
 </div>
 </div>
-<p>#EXCERCISE FIVE</p>
 </section>
+</section>
+<section id="task-five" class="level1">
+<h1>TASK FIVE</h1>
 <section id="how-many-records-is-in-the-new-file" class="level3">
 <h3 class="anchored" data-anchor-id="how-many-records-is-in-the-new-file">How many records is in the new file?</h3>
 <div class="cell">
