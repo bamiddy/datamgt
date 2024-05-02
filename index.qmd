@@ -1,7 +1,11 @@
 ---
-title: "working with real data"
-format: html
+title: "Assignment: Working with real data"
+subtitle: "Task Completed using R"
 editor: visual
+format: 
+  html:
+    toc: true
+    toc_float: true
 ---
 
 ## Loading the data and naming the Column
@@ -27,7 +31,9 @@ column2 <- c("animal", "Sire", "Dam")
 file_2 <- read.table("ThePED.txt.b", col.names = column2)
 ```
 
-Loading useful Library I am employing tidyverse to prove my work and it is also easy to use because it has inbuilt packages like dplyr and ggplot
+### Loading useful Library
+
+I am employing tidyverse to prove my work and it is also easy to use because it has inbuilt packages like dplyr and ggplot
 
 ```{r}
 library(tidyverse)
@@ -40,7 +46,7 @@ glimpse(file_1)
 # This presented me the number of row and column, and the data types of each variables i am dealing with.
 ```
 
-Check for any missing value at the ID/ANIMAL/INDEX i.e the first column if there is missing ID, It has to be handled before analysis
+I Check for any missing value at the ID/ANIMAL/INDEX i.e the first column if there is missing ID, It has to be handled before analysis
 
 ```{r}
 # Checking for na or Zero(0)
@@ -66,9 +72,9 @@ paste("The first data has",a,"missing values of animal, while the second file ha
 paste("The first data has",c," records of animal, while the second file has",d,"records of animal")
 ```
 
-#Excercise 1
+# TASK ONE
 
-###From file 1 select records from the 1st lactation, drop the last 5 columns
+### From file 1 select records from the 1st lactation, drop the last 5 columns
 
 Using the inbuilt r_package
 
@@ -166,7 +172,7 @@ NewFile |>
   head()
 ```
 
-#EXCERCISE TWO
+# TASK TWO
 
 ### Basic distribution parameters of ch4clean
 
@@ -207,7 +213,7 @@ cat("The mean of the distribution is ",avg,", The range of the distribution is "
 print(quat)
 ```
 
-#EXCERCISE THREE
+# TASK THREE
 
 ### Average ch4clean for each DIM
 
@@ -237,9 +243,9 @@ Data |>
        x = "Days in Milk", y = "Average Methane Emission")
 ```
 
-#EXCERCISE FOUR
+# TASK FOUR
 
-##Combine the file 1 obtained in the step 1/ with the file 2 based on the ID. This is performed using merge or column binding. i bind them by the animal column. which is the same as the ID.
+### Combine the file 1 obtained in the step 1/ with the file 2 based on the ID. This is performed using merge or column binding. i bind them by the animal column. which is the same as the ID.
 
 ```{r}
 Data2 = merge(NewFile, file_2, by = "animal")
@@ -252,8 +258,7 @@ I can view the new two new column with its values
 glimpse(Data2)
 ```
 
-
-#EXCERCISE FIVE
+# TASK FIVE
 
 ### How many records is in the new file?
 
