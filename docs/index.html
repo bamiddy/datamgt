@@ -105,7 +105,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#how-many-records-is-in-the-new-file" id="toc-how-many-records-is-in-the-new-file" class="nav-link" data-scroll-target="#how-many-records-is-in-the-new-file">How many records is in the new file?</a></li>
   <li><a href="#did-you-find-sire-and-dam-for-each-animal-how-many-animals-has-unknown-sire-how-many-animals-has-unknown-dam" id="toc-did-you-find-sire-and-dam-for-each-animal-how-many-animals-has-unknown-sire-how-many-animals-has-unknown-dam" class="nav-link" data-scroll-target="#did-you-find-sire-and-dam-for-each-animal-how-many-animals-has-unknown-sire-how-many-animals-has-unknown-dam">Did you find sire and dam for each animal? How many animals has unknown sire? How many animals has unknown dam?</a></li>
   </ul></li>
-  <li><a href="#last-task" id="toc-last-task" class="nav-link" data-scroll-target="#last-task">Last Task</a></li>
+  <li><a href="#last-task" id="toc-last-task" class="nav-link" data-scroll-target="#last-task">Last Task</a>
+  <ul class="collapse">
+  <li><a href="#range-of-dim" id="toc-range-of-dim" class="nav-link" data-scroll-target="#range-of-dim">Range Of DIM</a></li>
+  <li><a href="#first-observation" id="toc-first-observation" class="nav-link" data-scroll-target="#first-observation">First Observation</a></li>
+  <li><a href="#second-observation" id="toc-second-observation" class="nav-link" data-scroll-target="#second-observation">Second Observation</a></li>
+  </ul></li>
   </ul>
 </nav>
 </div>
@@ -577,6 +582,60 @@ $ Dam      &lt;chr&gt; "PL005291246311", "PL005291246311", "PL005291246311", "PL
 <div class="sourceCode cell-code" id="cb62"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="co"># File from step 1</span></span>
 <span id="cb62-2"><a href="#cb62-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(Data2, <span class="at">file =</span> <span class="st">"step4.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<section id="range-of-dim" class="level3">
+<h3 class="anchored" data-anchor-id="range-of-dim">Range Of DIM</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a>DIMILK <span class="ot">=</span> file_1<span class="sc">$</span>DIM</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a><span class="fu">quantile</span>(DIMILK)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  0%  25%  50%  75% 100% 
+   5   70  106  143  305 </code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb65"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb65-1"><a href="#cb65-1" aria-hidden="true" tabindex="-1"></a><span class="fu">max</span>(DIMILK) <span class="sc">-</span> <span class="fu">min</span>(DIMILK)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 300</code></pre>
+</div>
+</div>
+</section>
+<section id="first-observation" class="level2">
+<h2 class="anchored" data-anchor-id="first-observation">First Observation</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>  file_1 <span class="sc">|&gt;</span> </span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(DIM) <span class="sc">|&gt;</span> </span>
+<span id="cb67-3"><a href="#cb67-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">AvgCH4 =</span> <span class="fu">mean</span>(ch4clean), <span class="at">County =</span> <span class="fu">n</span>()) <span class="sc">|&gt;</span> </span>
+<span id="cb67-4"><a href="#cb67-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> DIM, <span class="at">y =</span> AvgCH4)) <span class="sc">+</span></span>
+<span id="cb67-5"><a href="#cb67-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb67-6"><a href="#cb67-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">450</span>, <span class="at">col=</span> <span class="st">"red"</span>, <span class="at">show.legend =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb67-7"><a href="#cb67-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> <span class="dv">168</span>) <span class="sc">+</span></span>
+<span id="cb67-8"><a href="#cb67-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"The Methane Emission Across The Days from Calving"</span>, </span>
+<span id="cb67-9"><a href="#cb67-9" aria-hidden="true" tabindex="-1"></a>       <span class="at">x =</span> <span class="st">"Days in Milk"</span>, <span class="at">y =</span> <span class="st">"Average Methane Emission"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-28-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The Data recorded the methane emission from Day 5 of lactation to day 305 of lactation. Looking at the graph, i can see the relationship is not linear, however there are plane of differences. <em>At onset of lactation:</em> The average methane emission tend to be HIGHER than 450 at about 24days in milk <em>After 3weeks</em> The average methane emission tend to be LOWER than 450 at from 24days to 168days in milk <em>After 168D1M</em> The average methane emission tend to be HIGHER than 450 at from 24days to 168days in milk</p>
+</section>
+<section id="second-observation" class="level2">
+<h2 class="anchored" data-anchor-id="second-observation">Second Observation</h2>
+<p>One of the average seems to be outlines, but after filtering the data. it is because the number of sample recorded for that day is small(294). it is only two sample recorded and the difference between them is high. So, the two sample is two small to represent the average production on that day. This might also be applicable to some other days, there should be a minimum range of sample to represent each days if average methane per day would be use as a parameter.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a>file_1 <span class="sc">|&gt;</span> </span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(DIM <span class="sc">==</span> <span class="dv">294</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">relocate</span>(DIM, ch4clean) <span class="sc">|&gt;</span> </span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(ch4clean))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>  DIM ch4clean         animal             ID lac12 lac_wk.
+1 294 749.5069 PL005251904442 PL005251904442     1      42
+2 294 591.9274 PL005247073206 PL005247073206     2      42</code></pre>
+</div>
+</div>
+</section>
 </section>
 
 </main>

@@ -320,3 +320,41 @@ write.csv(NewFile, file = "step1.csv")
 # File from step 1
 write.csv(Data2, file = "step4.csv")
 ```
+
+### Range Of DIM
+
+```{r}
+DIMILK = file_1$DIM
+
+quantile(DIMILK)
+max(DIMILK) - min(DIMILK)
+
+```
+
+## First Observation
+
+```{r}
+  file_1 |> 
+  group_by(DIM) |> 
+  summarise(AvgCH4 = mean(ch4clean), County = n()) |> 
+  ggplot(aes(x = DIM, y = AvgCH4)) +
+  geom_point() +
+  geom_hline(yintercept = 450, col= "red", show.legend = TRUE) +
+  geom_vline(xintercept = 168) +
+  labs(title = "The Methane Emission Across The Days from Calving", 
+       x = "Days in Milk", y = "Average Methane Emission")
+```
+
+The Data recorded the methane emission from Day 5 of lactation to day 305 of lactation. Looking at the graph, i can see the relationship is not linear, however there are plane of differences. *At onset of lactation:* The average methane emission tend to be HIGHER than 450 at about 24days in milk *After 3weeks* The average methane emission tend to be LOWER than 450 at from 24days to 168days in milk *After 168D1M* The average methane emission tend to be HIGHER than 450 at from 24days to 168days in milk
+
+## Second Observation
+
+One of the average seems to be outlines, but after filtering the data. it is because the number of sample recorded for that day is small(294). it is only two sample recorded and the difference between them is high. So, the two sample is two small to represent the average production on that day. This might also be applicable to some other days, there should be a minimum range of sample to represent each days if average methane per day would be use as a parameter.
+
+```{r}
+file_1 |> 
+  filter(DIM == 294) |> 
+  relocate(DIM, ch4clean) |> 
+  select(1:6) |> 
+  arrange(desc(ch4clean))
+```
