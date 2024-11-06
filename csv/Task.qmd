@@ -1,0 +1,233 @@
+---
+title: "Task"
+format: html
+editor: visual
+---
+
+Load the data
+
+```{r}
+library(tidyverse)
+library(ggpubr)
+library(ggpmisc)
+```
+
+```{r}
+data <- read.csv("ebv_fsm.csv")
+
+data <- data |> 
+  filter((source.production != 'I') & (gebjr >= 2012))
+
+```
+
+GLIMPSE OF THE DATA
+
+```{r}
+#glimpse(data)
+colnames(data)
+```
+
+RENAME 
+DIRECT == FSM
+SELECTIVE INDEX == BVO
+```{r}
+colnames(data)[c(11,30,26,32,33,13,23,34)] <- c('SoP', "DerivedBVO","FSM_rel","SIBVO", "BVO_rel", "prog_ind", "prog_dmi", "DiffBVO")
+```
+
+```{r}
+summary(data[26:34])
+```
+
+THE RELIABILIT OF THE TWO METHODS ARE THE SAME
+
+```{r}
+table(data$BVO_rel == data$FSM_rel)
+dim(data)
+```
+
+
+THE DIFFERENCE BETWEEN THE METHODS DIFF_BVO
+
+```{r}
+summary(data$DiffBVO)
+cat('Std = ',sd(data$DiffBVO))
+```
+
+
+```{r}
+colnames(data)
+```
+
+
+```{r}
+k <- data |>
+  summarise("SoP" = "ALL", size = n(), "DerivedBVO_MEAN" = mean(DerivedBVO),"SIBVO_MEAN" = mean(SIBVO),
+            "DerivedBVO_STD" = sd(DerivedBVO),"SIBVO_STD" = sd(SIBVO), 'Avg_DiffBVO' = mean(DiffBVO), 'STD_DiffBVO' = sd(DiffBVO), "BoundNine" = sum(DiffBVO < 9 & DiffBVO > -9))
+a <- data |> 
+  group_by(SoP) |> 
+  summarise(size = n(), "DerivedBVO_MEAN" = mean(DerivedBVO),"SIBVO_MEAN" = mean(SIBVO), 
+            "DerivedBVO_STD" = sd(DerivedBVO),"SIBVO_STD" = sd(SIBVO), 'Avg_DiffBVO' = mean(DiffBVO), 'STD_DiffBVO' = sd(DiffBVO), "BoundNine" = sum(DiffBVO < 9 & DiffBVO > -9))
+
+b <- data |> 
+  filter(SoP == "E" &  prog_ind > 20 & prog_dmi == 0) |> 
+  summarise("SoP" = "E-GROUP1", size = n(), "DerivedBVO_MEAN" = mean(DerivedBVO),"SIBVO_MEAN" = mean(SIBVO), 
+            "DerivedBVO_STD" = sd(DerivedBVO),"SIBVO_STD" = sd(SIBVO), 'Avg_DiffBVO' = mean(DiffBVO), 'STD_DiffBVO' = sd(DiffBVO), "BoundNine" = sum(DiffBVO < 9 & DiffBVO > -9))
+  
+c <- data |> 
+  filter(SoP == "E" &  prog_ind > 20 & prog_dmi > 5) |> 
+  summarise("SoP" = "E-GROUP2", size = n(), "DerivedBVO_MEAN" = mean(DerivedBVO),"SIBVO_MEAN" = mean(SIBVO), 
+            "DerivedBVO_STD" = sd(DerivedBVO),"SIBVO_STD" = sd(SIBVO), 'Avg_DiffBVO' = mean(DiffBVO), 'STD_DiffBVO' = sd(DiffBVO), "BoundNine" = sum(DiffBVO < 9 & DiffBVO > -9))
+
+y <- rbind(k,a,b,c)
+
+y <- y |> 
+  mutate("%BoundNine" = (BoundNine/size*100))
+
+y[] <- lapply(y, function(x) if(is.numeric(x)) round(x, 2) else x)
+
+tab <- y[, -9]
+tab
+
+```
+
+```{r}
+# tab[, 1] <- as.character(tab[, 1])
+# tab[, 2:5] <- lapply(tab[, 2:5], as.numeric)
+```
+
+```{r}
+data <- mutate(data, Diff_DMI = dmi.incl.voorspellers - dmi.direct)
+
+k <- data |>
+    summarise("SoP" = "ALL", size = n(), "Avg_DMI" = mean(dmi.direct),"Avg_DMIPred" = mean(dmi.incl.voorspellers),
+             "Avg_Diff" = mean(Diff_DMI), "Std_DMI" = sd(dmi.direct),"Std_DMIPred" = sd(dmi.incl.voorspellers),
+             "Std_diff" = sd(Diff_DMI))
+a <- data |> 
+  group_by(SoP) |> 
+  summarise(size = n(), "Avg_DMI" = mean(dmi.direct),"Avg_DMIPred" = mean(dmi.incl.voorspellers),
+             "Avg_Diff" = mean(Diff_DMI), "Std_DMI" = sd(dmi.direct),"Std_DMIPred" = sd(dmi.incl.voorspellers),
+             "Std_diff" = sd(Diff_DMI))
+
+b <- data |> 
+  filter(SoP == "E" &  prog_ind > 20 & prog_dmi == 0) |> 
+  summarise("SoP" = "E-GROUP1", size = n(), "Avg_DMI" = mean(dmi.direct),"Avg_DMIPred" = mean(dmi.incl.voorspellers),
+             "Avg_Diff" = mean(Diff_DMI), "Std_DMI" = sd(dmi.direct),"Std_DMIPred" = sd(dmi.incl.voorspellers),
+             "Std_diff" = sd(Diff_DMI))
+  
+c <- data |> 
+  filter(SoP == "E" &  prog_ind > 20 & prog_dmi > 5) |> 
+  summarise("SoP" = "E-GROUP2", size = n(), "Avg_DMI" = mean(dmi.direct),"Avg_DMIPred" = mean(dmi.incl.voorspellers),
+             "Avg_Diff" = mean(Diff_DMI), "Std_DMI" = sd(dmi.direct),"Std_DMIPred" = sd(dmi.incl.voorspellers),
+             "Std_diff" = sd(Diff_DMI))
+
+y <- rbind(k,a,b,c)
+
+
+y[] <- lapply(y, function(x) if(is.numeric(x)) round(x, 2) else x)
+
+sec <- y[, -9]
+sec
+```
+
+
+
+
+
+```{r}
+write.csv(sec, file= "sec.csv")
+```
+
+
+```{r}
+lapply(tab, class)
+```
+
+BY GENETIC GAIN YEARLY
+
+```{r}
+data |> 
+  filter(SoP == "E") |> 
+  group_by(gebjr) |> 
+ summarise(size = n(), "DerivedBVO_MEAN" = mean(DerivedBVO),"SIBVO_MEAN" = mean(SIBVO),
+            "DerivedBVO_STD" = sd(DerivedBVO),"SIBVO_STD" = sd(SIBVO), 'Avg_DiffBVO' = mean(DiffBVO), 'STD_DiffBVO' = sd(DiffBVO), "BoundNine" = sum(DiffBVO < 9 & DiffBVO > -9))
+
+```
+
+
+
+
+TOP 50 MAX AND MIN BVO_DIFF 
+ 
+```{r}
+a <- data |>
+  slice_max(DiffBVO, n = 300, with_ties = FALSE) |>
+  group_by(SoP) |>
+  summarise('Top_Positive' = n())
+
+b <- data |>
+  slice_min(DiffBVO, n = 300, with_ties = FALSE) |>
+  group_by(SoP) |>
+  summarise('Top_Negative' = n())
+
+top = merge(a,b)
+
+top["size"] = c(143, 2210, 1098, 669)
+top = mutate(top, '%Pos' = Top_Positive/size*100, '%Neg' = Top_Negative/size*100)
+
+top <- top |> 
+select(SoP, size, Top_Positive, '%Pos', Top_Negative, '%Neg')
+
+top[] <- lapply(top, function(x) if(is.numeric(x)) round(x, 2) else x)
+
+top
+```
+
+```{r}
+write.csv(top, "sectab.csv")
+```
+
+
+```{r}
+summary(lm(formula = data$DerivedBVO ~ data$SIBVO))
+```
+
+```{r}
+data |> 
+  ggplot(aes(x = DerivedBVO, y= SIBVO)) +
+  geom_point() +
+  geom_smooth(method = 'lm', linewidth = 0.5, formula = 'y ~ x', se = FALSE)+
+stat_regline_equation(label.x = -200, label.y = 140)+
+  stat_cor(aes(label=..rr.label..), label.x = -200, label.y = 180)+
+  facet_wrap(~SoP) 
+```
+
+```{r}
+data |> 
+  ggplot(aes(x = DerivedBVO, y= SIBVO)) +
+  geom_point()+
+  stat_poly_line(se = FALSE)+
+#  stat_poly_eq(use_label(c("eq", "R2")))+
+    stat_poly_eq(use_label("eq")) +
+  stat_poly_eq(label.y = 0.8) +
+  facet_wrap(~SoP)
+```
+
+
+
+```{r}
+data |> 
+    ggplot(aes(x = DerivedBVO, y= SIBVO)) +
+  geom_point() +
+  geom_smooth(method = 'lm', linewidth = 0.5, formula = 'y ~ x', se = FALSE)+
+stat_regline_equation(label.x = -200, label.y = 140)+
+  stat_cor(aes(label=..rr.label..), label.x = -200, label.y = 180)
+```
+
+```{r}
+
+```
+
+
+
+
+
