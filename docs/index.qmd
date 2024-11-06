@@ -1,6 +1,6 @@
 ---
 title: "Analysis with T&H data"
-subtitle: "Task Completed using R"
+subtitle: "Simple stat and plots"
 editor: visual
 format: 
   html:
