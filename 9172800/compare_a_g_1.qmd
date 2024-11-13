@@ -1,0 +1,104 @@
+---
+title: "Comparison of matrices"
+format: html
+---
+
+## Load libraries
+
+```{r}
+library(tidyverse)
+```
+
+
+## Download file
+
+```{r}
+a<-read_table("https://github.com/thembee/GS/raw/main/A.txt", col_names = F)
+
+g<-read_table("https://github.com/thembee/GS/raw/main/G.txt", col_names = F)
+```
+
+## Convert data to matrix
+
+```{r}
+a_mtr<-as.matrix(a)
+a_mtr
+```
+
+
+```{r}
+g_mtr<-as.matrix(g)
+round(g_mtr,2)
+```
+
+## Show diagional elements
+
+```{r}
+diag(a_mtr)
+
+```
+Average inbreeding in A
+
+```{r}
+mean(diag(a_mtr)-1)
+```
+
+Averag inbreeding in G
+```{r}
+mean(diag(g_mtr)-1)
+```
+
+
+## Average relationships
+
+We need to look at of-diagonals
+
+```{r}
+off_a<-a_mtr[lower.tri(a_mtr, diag = FALSE)]
+```
+
+```{r}
+off_g<-g_mtr[lower.tri(g_mtr)]
+```
+
+Average relationship in A
+
+```{r}
+mean(off_a)
+
+```
+
+Average relationship in G
+
+```{r}
+mean(off_g)
+```
+
+# simple plot
+
+```{r}
+plot(a_mtr,g_mtr)
+```
+
+## Plot this in ggplot
+
+Convert matrix to a fata frame
+
+```{r}
+a_to_plot<-as.data.frame.table(a_mtr)
+g_to_plot<-as.data.frame.table(g_mtr)
+```
+
+Combine dataframes together
+
+```{r}
+a_g_to_pl<-cbind(select(a_to_plot,a=Freq),select(g_to_plot,g=Freq) )
+```
+PLot in ggplot
+
+
+```{r}
+a_g_to_pl |>
+  ggplot(aes(x=a,y=g)) +
+  geom_point()
+```

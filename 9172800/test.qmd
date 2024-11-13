@@ -1,0 +1,57 @@
+---
+title: "classwitmarcin"
+format: html
+editor: visual
+---
+
+```{r}
+library(AGHmatrix)
+library(tidyverse)
+```
+
+```{r}
+A <- read.table(file = "A.txt")
+A <- as.matrix(A)
+```
+
+```{r}
+G <- read.table(file = "G.txt")
+G <- as.matrix(G)
+```
+
+off-diagonal value OF A
+
+```{r}
+A[lower.tri(A)]
+```
+
+```{r}
+mean(A[lower.tri(A)])
+```
+
+diagonal value OF A
+
+```{r}
+mean(diag(A)-1)
+```
+
+```{r}
+mean(A[upper.tri(A)])
+```
+
+FOR G diagonal
+
+```{r}
+mean(diag(G-1))
+
+```
+
+FOR G off-diagonal
+
+```{r}
+mean(G[lower.tri(G)])
+```
+
+```{r}
+plot(A, G)
+```

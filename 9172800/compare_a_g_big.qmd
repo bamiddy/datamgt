@@ -1,0 +1,171 @@
+---
+title: "Compare A and G 2"
+format: html
+---
+
+
+
+## Load libraries
+
+```{r}
+library(tidyverse)
+library(AGHmatrix)
+```
+
+
+## Download files
+
+```{r}
+ped<-read.table("https://github.com/thembee/GS/raw/main/pedigree.txt")
+
+gen<-read.table("https://github.com/thembee/GS/raw/main/genotypes.txt")
+```
+
+## Create marixes
+
+Additive relationship matrix is created by using Amatrix function
+
+```{r}
+a_matrix<-Amatrix(ped)
+```
+
+Genomic relationship matrix is created using Gmatrix function, but first data frame need to be converted to a matrix object
+
+```{r}
+g_matrix<-Gmatrix(as.matrix(gen))
+```
+
+# compare A and G as in previous examples
+
+Only 100 last animals from the pedigree are genotyped!!
+
+```{r}
+a_matrix_sel<-a_matrix[401:500,401:500]
+```
+
+simple plot
+
+```{r}
+plot(a_matrix_sel, g_matrix)
+```
+
+
+
+
+Re-do plots in ggplot
+
+conver matrices to data frames
+
+```{r}
+a_dt<-as.data.frame.table(a_matrix_sel)
+g_dt<-as.data.frame.table(g_matrix)
+```
+
+
+cobbine to a single data frame
+
+```{r}
+a_and_g_dt<-cbind(
+  select(a_dt,ID1=Var1,ID2=Var2, a=Freq),
+  select(g_dt, g=Freq)
+)
+```
+
+Plot A vs. G
+
+```{r}
+a_and_g_dt |>
+  ggplot(aes(y=g,x=a)) + 
+  geom_point() + 
+  geom_abline(intercept = 0, slope = 1) +
+  theme_classic()
+```
+
+```{r}
+a_and_g_dt |>
+  ggplot(aes(y=ID1, x=ID2)) +
+  geom_raster(aes(fill=a))
+```
+
+
+```{r}
+a_and_g_dt |>
+  ggplot(aes(y=ID1, x=ID2)) +
+  geom_raster(aes(fill=g))
+```
+
+a = 200
+m = 50,000
+
+
+
+
+
+
+ASSIGNMENT OF CREATING YOUR GENOTYPE
+```{r}
+# Assignmeent
+# Define the number of animals and number of SNP markers
+
+n_ani <- 15
+n_mar <- 5
+```
+
+
+```{r}
+# Alleles declaration. describing the 
+allele <- matrix(nrow = n_ani*2, ncol = n_mar, byrow = TRUE, 
+            data = sample(c(0,1), 2*n_ani*n_mar, replace = TRUE))
+```
+
+
+```{r}
+# Convert alleles to genotype (M matrix)
+st <- seq(1, n_ani*2, 2)
+M <- NULL # we need to convert each line to matrix, we can do that by r-binding with M
+
+
+for (i in 1:length(st)){
+  M <- rbind(M, colSums(allele[ st[i]:(st[i]+1) , ])-1)
+}
+```
+
+
+```{r}
+# Creating P (allele frequency) using colsum
+
+P1 <- colSums(allele) / (2*n_ani)
+```
+
+
+```{r}
+print(P1)
+
+P <- 2 * (P1-0.5)
+
+print(P)
+```
+
+
+```{r}
+# Center genotypes (Z matrix)
+Z <- matrix(nrow = n_ani, ncol = n_mar)
+
+for (i in 1:n_ani){
+  Z[i, ]  <-  M[i, ]-P
+}
+```
+
+```{r}
+# Create the G matrix
+G = (Z %*% t(Z))/(2*sum(P * (1-P)))
+
+```
+
+```{r}
+G
+```
+
+
+
+

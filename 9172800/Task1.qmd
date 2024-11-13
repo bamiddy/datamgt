@@ -1,0 +1,431 @@
+---
+title: "Task1"
+format: html
+editor: visual
+---
+
+
+PERFECT TASK BY ALI
+```{r}
+# Define the number of animals and SNP markers
+num_animals <- 10  # Example number of animals
+num_markers <- 3   # Example number of SNP markers
+```
+
+```{r}
+# Define alleles matrix with two rows per animal (coded as 0 and 1)
+alleles <- matrix(nrow = num_animals * 2, ncol = num_markers, byrow = TRUE, c(
+  1, 1, 0,
+  0, 1, 0,
+  1, 0, 1,
+  1, 1, 1,
+  0, 0, 1,
+  1, 1, 0,
+  0, 1, 0,
+  1, 0, 1,
+  1, 1, 1,
+  0, 0, 1,
+  1, 1, 0,
+  0, 1, 0,
+  1, 0, 1,
+  1, 1, 1,
+  0, 0, 1,
+  1, 1, 0,
+  0, 1, 0,
+  1, 0, 1,
+  1, 1, 1,
+  0, 0, 1
+))
+
+# Convert alleles to genotype (M matrix)
+M <- NULL
+s <- seq(1, (num_animals * 2), 2)
+
+for(i in 1:length(s)) {
+  # Calculate genotype by summing allele pairs for each marker and subtracting 1
+  M <- rbind(M, colSums(alleles[s[i]:(s[i]+1), ]) - 1)
+}
+
+# Calculate allele frequencies (P)
+Pi <- colSums(alleles) / (2 * num_animals)
+P <- 2 * (Pi-0.5)
+
+# Center genotypes (Z matrix)
+Z <- matrix(nrow = num_animals, ncol = num_markers)
+
+for(i in 1:num_animals) {
+  Z[i, ] <- M[i, ] - P
+}
+
+# Create the G matrix
+G_matrix <- (Z %*% t(Z)) / (2 * sum(P * (1 - P)))
+
+# Print results
+cat("Genotype matrix (M):\n")
+print(M)
+cat("\nAllele frequencies (P):\n")
+print(Pi)
+print(P)
+cat("\nCentered genotype matrix (Z):\n")
+print(Z)
+cat("\nGenomic relationship matrix (G):\n")
+print(G_matrix)
+```
+
+ASSIGNMENT OF CREATING YOUR GENOTYPE
+```{r}
+# Assignmeent
+# Define the number of animals and number of SNP markers
+
+n_ani <- 15
+n_mar <- 5
+```
+
+
+```{r}
+# Alleles declaration. describing the 
+allele <- matrix(nrow = n_ani*2, ncol = n_mar, byrow = TRUE, 
+            data = sample(c(0,1), 2*n_ani*n_mar, replace = TRUE))
+```
+
+
+```{r}
+# Convert alleles to genotype (M matrix)
+st <- seq(1, n_ani*2, 2)
+M <- NULL # we need to convert each line to matrix, we can do that by r-binding with M
+
+
+for (i in 1:length(st)){
+  M <- rbind(M, colSums(allele[ st[i]:(st[i]+1) , ])-1)
+}
+```
+
+
+```{r}
+# Creating P (allele frequency) using colsum
+
+P1 <- colSums(allele) / (2*n_ani)
+```
+
+
+```{r}
+print(P1)
+
+P <- 2 * (P1-0.5)
+
+print(P)
+```
+
+
+```{r}
+# Center genotypes (Z matrix)
+Z <- matrix(nrow = n_ani, ncol = n_mar)
+
+for (i in 1:n_ani){
+  Z[i, ]  <-  M[i, ]-P
+}
+```
+
+```{r}
+# Create the G matrix
+G = (Z %*% t(Z))/(2*sum(P * (1-P)))
+```
+
+
+```{r}
+M
+```
+
+
+GENOMIC BREEDING VALUE ESTIMATION
+
+```{r}
+A <- matrix(c(
+1.00, 0.00, 0.00, 0.500, 0.000, 0.50, 0.00, 0.250,
+0.00, 1.00, 0.00, 0.000, 0.500, 0.50, 0.00, 0.250,
+0.00, 0.00, 1.00, 0.000, 0.500, 0.00, 0.00, 0.500,
+0.50, 0.00, 0.00, 1.000, 0.000, 0.25, 0.00, 0.125,
+0.00, 0.50, 0.50, 0.000, 1.000, 0.25, 0.00, 0.375,
+0.50, 0.50, 0.00, 0.250, 0.250, 1.00, 0.00, 0.500,
+0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 1.00, 0.00,
+0.25, 0.25, 0.50, 0.125, 0.375, 0.50, 0.00, 1.000), ncol=8,byrow=T)
+```
+
+
+
+```{r}
+y <- matrix(c(
+4.5,
+2.9,
+3.9,
+3.5,
+5.0), ncol=1,byrow=T)
+```
+
+
+```{r}
+X <- matrix(c(
+1,0,
+0,1,
+0,1,
+1,0,
+1,0), ncol=2,byrow=T)
+```
+
+
+```{r}
+Z <- matrix(c(
+0,0,0,1,0,0,0,0,
+0,0,0,0,1,0,0,0,
+0,0,0,0,0,1,0,0,
+0,0,0,0,0,0,1,0,
+0,0,0,0,0,0,0,1), ncol=8,byrow=T)
+```
+
+```{r}
+sigma2a <- 20
+sigma2e <- 40
+```
+
+```{r}
+alpha=sigma2e/sigma2a
+```
+
+```{r}
+Ainv <- solve(A)
+```
+
+
+```{r}
+LHS=rbind(
+cbind( t(X)%*%X, t(X)%*%Z ) ,
+cbind(t(Z)%*%X, t(Z)%*%Z+Ainv*alpha)
+)
+```
+
+```{r}
+RHS= rbind( t(X)%*%y, t(Z)%*%y )
+```
+
+
+```{r}
+SOL=solve(LHS) %*% RHS
+```
+
+
+```{r}
+G <- matrix(c(
+1.00, 0.000, 0.000, 0.60, 0.000, 0.500, 0.020, 0.200,
+0.00, 1.000, 0.000, 0.00, 0.500, 0.500, 0.015, 0.250,
+0.00, 0.000, 1.000, 0.00, 0.550, 0.000, 0.025, 0.450,
+0.60, 0.000, 0.000, 1.00, 0.000, 0.250, 0.020, 0.200,
+0.00, 0.500, 0.550, 0.00, 1.000, 0.250, 0.025, 0.375,
+0.50, 0.500, 0.000, 0.25, 0.250, 1.000, 0.015, 0.500,
+0.02, 0.015, 0.025, 0.02, 0.025, 0.015, 1.000, 0.200,
+0.20, 0.250, 0.450, 0.20, 0.375, 0.500, 0.200, 1.000
+), ncol=8,byrow=T)
+```
+
+
+```{r}
+Ginv <- solve(G)
+```
+
+
+```{r}
+LHS=rbind(
+cbind( t(X)%*%X, t(X)%*%Z ) ,
+cbind(t(Z)%*%X, t(Z)%*%Z+Ginv*alpha)
+)
+```
+
+```{r}
+RHS= rbind( t(X)%*%y, t(Z)%*%y )
+```
+
+```{r}
+GSOL=solve(LHS) %*% RHS
+```
+
+
+```{r}
+plot(G,A)
+```
+
+```{r}
+cbind(c(NA,NA,rank(SOL[3:10])), GSOL)
+```
+
+
+```{r}
+# Defining the var
+N <- 1000
+Ne <- 25
+h2 <- 0.5
+L <- 29
+```
+
+NOTE EXAMPLE
+```{r}
+k <- 1/(log(2*Ne))
+paste("The value of k is: ", k)
+
+q <- 2*Ne*L
+paste("The value of q is: ", q)
+
+lamda <- (q*k)/h2
+paste("The value of lamda is: ", lamda)
+
+a <- 1 + 2*lamda/N
+paste("The value of a is: ", a)
+
+GEBV <- (1-lamda/(2*N*sqrt(a))*log((1+a+2*sqrt(a))/(1+a-2*sqrt(a))))
+paste("The value of GEBV is: ", GEBV)
+```
+
+
+```{r}
+#ALI
+# Parameters
+Me <- 1000  # Number of independent chromosome segments
+Np_values <- seq(50, 5000, 50)  # Range of reference population sizes
+h2_values <- seq(0.1, 0.9, 0.1)  # Range of heritability values
+
+# Create an empty data frame to store results
+results <- expand.grid(Np = Np_values, h2 = h2_values)
+results$acc <- NA  # Column to store accuracy values
+
+# Calculate accuracy for each combination of Np and h2
+for (i in 1:nrow(results)) {
+  Np <- results$Np[i]
+  h2 <- results$h2[i]
+  results$acc[i] <- sqrt((Np * h2) / (Np * h2 + Me))
+}
+
+# Load necessary package for plotting
+library(ggplot2)
+
+# Plotting with y-axis from 0 to 1 with 0.1 increments
+ggplot(results, aes(x = Np, y = acc, color = factor(h2))) +
+  geom_line() +
+  labs(title = "Accuracy of Selection (acc) for Different Population Sizes and Heritability",
+       x = "Reference Population Size (Np)",
+       y = "Accuracy of Selection (acc)",
+       color = "Heritability (h²)") +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1)) +
+  theme_minimal()
+```
+
+
+
+```{r}
+# Calculate the inverse of the LHS matrix from the BLUP model
+LHS_inv <- solve(LHS)
+
+# Extract diagonal elements (d_i values)
+d_i <- diag(LHS_inv)[3:10]
+
+# Calculate accuracy (r_i) for each animal
+r_i <- sqrt(1 - (d_i * alpha))
+
+# Display the accuracies
+r_i
+```
+
+TOBI
+
+```{r}
+Me <- 1000 # Number of independent chromosome
+Np <- seq(50, 10000, l = 50)
+h2 <- round(seq(0.01, 0.9, l=6), 2)
+
+
+H <- rep(h2, 50)
+RP <- rep(Np, each =6)
+
+data <- data_frame(RP, H)
+data <- mutate(data, Acc = sqrt((RP*H)/((RP*H)+Me)))
+
+
+data |> 
+  ggplot(aes(x = RP, y = Acc, colour = factor(H))) +
+  geom_line() +
+  scale_y_continuous(limits = c(0, 1), breaks = seq(0, 1, by = 0.1)) +
+  theme_minimal()
+```
+
+
+
+
+
+
+
+
+
+
+TASK CLASS GENETIC PROGRESS
+```{r}
+r <- 0.74
+Me <- 1000
+h2 <- 0.4
+```
+
+```{r}
+Np <- ((r**2)*Me)/(h2-(r**2)*h2)
+```
+
+
+
+NUMBER 2
+```{r}
+i <- 1.7
+r <- 0.9
+v <- 150
+L <- 6
+
+R <- r*i*sqrt(v)
+R
+
+RL <- R/L
+RL
+```
+
+
+
+NUMBER 3
+```{r}
+i <- 1.7
+r <- 0.74
+v <- 150
+L <- 2
+
+R2 <- r*i*sqrt(v)
+R2
+
+RL2 <- R2/L
+RL2
+```
+
+```{r}
+a <- c(R, RL)
+b <- c(R2, RL2)
+
+xy <- c(a,b)
+
+xy <- data_frame(xy)
+
+xy["Source"] <- c("1R", "1R/Y", "2R","2R/Y")
+xy["Class"] <- c("Trad", "Trad", "Genom", "Genom")
+colnames(xy)[1] <- "Accuracy"
+select(xy, Class, Source, Accuracy)
+
+
+```
+
+```{r}
+xy |> 
+  ggplot(aes(x= Source, y = Accuracy, fill = Class)) +
+  geom_bar(stat = "identity")
+```
+
+

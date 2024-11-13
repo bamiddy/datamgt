@@ -13,6 +13,7 @@ library(palmerpenguins)
 ```{r}
 glimpse(penguins)
 ```
+
 ```{r}
 penguins |> 
   ggplot(aes(x= flipper_length_mm, y = body_mass_g)) +
@@ -21,8 +22,6 @@ penguins |>
   labs(x = "Flipper Lenght(mm)", y = "Body mass(g)",
        title = "Body mass and flipper length", subtitle = "Dimension for Adile, Chinstrap and Gentoo")
 ```
-
-
 
 ```{r}
 ggplot(
@@ -43,33 +42,8 @@ ggplot() +
   )
 ```
 
-
 ```{r}
 penguins |> 
   ggplot(aes(x= fct_infreq(species))) +
   geom_bar()
 ```
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
