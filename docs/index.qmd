@@ -20,7 +20,7 @@ library(tidyverse)
 glimpse(file)
 ```
 
-Split the datetime column to filter with different through time variable
+Split the datetime column to filter through different time variable
 ```{r}
 data2 <- separate(file, col = datetime, into = c("Date", "Time"), sep = " ")
 data <- separate(data2, col = Date, into = c("Year", "Month", "Day"), sep = "-")
@@ -33,20 +33,20 @@ data |>
 summary()
 ```
 
-Generating the variance and Std
+Generating the variance and Standard deviation
 
 ```{r}
 data |> 
-  summarise(VarT = var(temp_wew), VarH = var(rh, na.rm = TRUE), StdT = sd(temp_wew), StdH = sd(rh, na.rm = TRUE))
+  summarise(Var_Temp = var(temp_wew), Var_Hum = var(rh, na.rm = TRUE), Std_Temp = sd(temp_wew), Std_Hum = sd(rh, na.rm = TRUE))
 ```
 
 ```{r}
 file["month"] <- data[["Month"]]
 ```
 
-### Distribution of the T and H
+### Distribution of the Temperature and Humidity
 ```{r}
-# Distributio of Temperature
+# Distribution of Temperature
 Temperature <- file$temp_wew
 hist(Temperature)
 ```
@@ -55,19 +55,25 @@ Temperature distribution is normally distributed, but there is appearance of alm
 
 ```{r}
 # Distributio of Humidity
-rtv_humidity <- file$rh
-hist(rtv_humidity)
+relative_humidity <- file$rh
+hist(relative_humidity)
 ```
 Humidity distribution is not normally distributed over the year. higher humidity is prevalent
 
 
 
-*Temperature Distribuion indicating different month of the year*
+*Temperature Distribution indicating different month of the year*
 ```{r}
 file |> 
   ggplot(aes(x= datetime, y = temp_wew, colour = month)) +
   geom_point()+
-  geom_hline(yintercept = 23)
+  geom_hline(yintercept = 23) +
+  labs(
+    title = "Daily Distribution of Temperature",
+      x = "Day Time",
+      y = "Average Temperature (°C)",
+      colour = "Month"
+  )
 ```
 
 The Colors represents different months, starting from Feb to Dec. There is trend showing a bell distribution. However, some months (summer) appear to experience higher temperature above 23, while some are below.
@@ -81,14 +87,25 @@ For better *visualization* The monthly average temperature over the year, signif
   summarise(AverageT = mean(temp_wew), AverageH = mean(rh, na.rm = TRUE)) |> 
     ggplot(aes(x = Month,y =AverageT, group = 1)) +
   geom_line(colour = "blue") +
-  geom_point() 
+  geom_point() +
+  labs(
+    title = "Monthly Distribution of Temperature",
+      x = "Month of the year",
+      y = "Average Temperature (°C)"
+  )
+  
 ```
 
 BoxPlot emphasis on the bell shape and the means of monthly temperature. There is very few data available for Dec
 ```{r}
 data |> 
   ggplot(aes(y = temp_wew, x = Month))+
-  geom_boxplot()
+  geom_boxplot()  +
+  labs(
+    title = "Monthly Distribution of Temperature",
+      x = "Month of the year",
+      y = "Average Temperature (°C)"
+  )
 ```
 
 
@@ -96,7 +113,13 @@ data |>
 ```{r}
 file |> 
   ggplot(aes(x= datetime, y = rh, colour = month)) +
-  geom_point()
+  geom_point() +
+  labs(
+    title = "Daily Distribution of Temperature",
+      x = "Day Time",
+      y = "Average Temperature (°C)",
+      colour = "Month"
+  )
 ```
 For Humidity, the pattern is different.. higher humidity towards the end of the year and higher variance at the mid months.
 
@@ -106,7 +129,12 @@ For Humidity, the pattern is different.. higher humidity towards the end of the 
   summarise(AverageT = mean(temp_wew), AverageH = mean(rh, na.rm = TRUE)) |> 
     ggplot(aes(x = Month,y =AverageH, group = 1)) +
   geom_line(colour = "green") +
-  geom_point() 
+  geom_point()  +
+  labs(
+    title = "Monthly Distribution of Relative Humidity",
+      x = "Month of the year",
+      y = "Average Relative Humidity (%)"
+  )
 ```
 
 Plotting the mean of the distribution, it shows increasing trend of humidity.
@@ -114,14 +142,22 @@ Plotting the mean of the distribution, it shows increasing trend of humidity.
 ```{r}
 data |> 
   ggplot(aes(y = rh, x = Month))+
-  geom_boxplot()
+  geom_boxplot()  +
+  labs(
+    title = "Monthly Distribution of Relative Humidity",
+      x = "Month of the year",
+      y = "Average Relative Humidity (%)"
+  )
 ```
+
 The box_plot emphasis the increasing trends of the rh mean over the year.
 
 
 ### Distribution during the day (Hourly)
 
 The average hourly temperature of the day, shows rising and falling pattern Temperature decreasing from early hour(00:00) and to lowest temperature at 06:00 and beginning to rise from that hour to the highest temperature at region between 16-19:00 and after which it started to decrease again.
+
+
 ```{r}
 data |> 
   group_by(Time) |> 
@@ -129,6 +165,11 @@ data |>
   ggplot(aes(x = Time,y =AverageT, group = 1)) +
   geom_line(colour = "blue") +
   geom_point() +
+  labs(
+    title = "Hourly Distribution of Temperature",
+      x = "Day Time (Hour)",
+      y = "Average Temperature (°C)"
+  ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -141,6 +182,11 @@ data |>
   ggplot(aes(x = Time,y =AverageT, group = 1)) +
   geom_line(colour = "blue") +
   geom_point() +
+  labs(
+    title = "Hourly Distribution of Temperature",
+      x = "Day Time (Hour)",
+      y = "Average Temperature (°C)"
+  ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -152,7 +198,12 @@ data |>
   summarise(AverageT = mean(temp_wew), AverageH = mean(rh, na.rm = TRUE)) |> 
   ggplot(aes(x = Time,y =AverageH, group = 1)) +
   geom_line(colour = "red") +
-  geom_point() +
+  geom_point()  +
+  labs(
+    title = "Hourly Distribution of Relative Humidity",
+      x = "Day Time (Hour)",
+      y = "Average Relative Humidity (%)"
+  ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -164,7 +215,12 @@ data |>
   summarise(AverageT = mean(temp_wew), AverageH = mean(rh, na.rm = TRUE)) |> 
   ggplot(aes(x = Time,y =AverageH, group = 1)) +
   geom_line(colour = "red") +
-  geom_point() +
+  geom_point() +   
+  labs(
+    title = "Hourly Distribution of Relative Humidity",
+      x = "Day Time (Hour)",
+      y = "Average Relative Humidity (%)"
+  ) +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
 
@@ -178,7 +234,14 @@ The above graph represent, daily max and minimum temperature.Both follow the sam
   summarise(Tmax = max(temp_wew), Tmin = min(temp_wew)) |> 
   ggplot() +
   geom_point(aes(x= Date,y = Tmax), color = "red") +
-  geom_point(aes(x= Date,y = Tmin), color = "blue") 
+  geom_point(aes(x= Date,y = Tmin), color = "blue")  +
+  labs(
+    title = "Distribution of Maximum and Minimum Daily Temperature",
+      x = "Day Time",
+      y = "Temperature (°C)",
+    caption = "Red points indicates the daily maximum temperature
+     while the blue is the minimum temperature"
+  )
   
 ```
 
@@ -189,7 +252,14 @@ data2 |>
   summarise(Hmax = max(rh), Hmin = min(rh)) |> 
   ggplot() +
   geom_point(aes(x= Date,y = Hmax), color = "red") +
-  geom_point(aes(x= Date,y = Hmin, group = 1), color = "blue") 
+  geom_point(aes(x= Date,y = Hmin, group = 1), color = "blue")   +
+  labs(
+    title = "Distribution of Maximum and Minimum Daily Relative Humidity",
+      x = "Day Time",
+      y = "Relative humidity (%)",
+    caption = "Red points indicates the daily maximum Relative humidity
+     while the blue is the minimum humidity"
+  )
 ```
 
 
@@ -200,7 +270,12 @@ data2 |>
   group_by(Date) |> 
   summarise(ddT = max(temp_wew)-min(temp_wew), ddH = max(rh)-min(rh)) |> 
   ggplot(aes(x= Date, y = ddT, group = 1)) +
-  geom_point()
+  geom_point()   +
+  labs(
+    title = "Distribution of Daily Change in Temperature (Max - Min)",
+      x = "Day Time",
+      y = "Change in Temperature (°C)",
+  )
 ```
 
 
@@ -212,5 +287,10 @@ data2 |>
   group_by(Date) |> 
   summarise(ddT = max(temp_wew)-min(temp_wew), ddH = max(rh)-min(rh)) |> 
   ggplot(aes(x= Date, y = ddH, group = 1)) +
-  geom_point()
+  geom_point()  +
+  labs(
+    title = "Distribution of Daily Change in Humidity (Max - Min)",
+      x = "Day Time",
+      y = "Change in Humidity (%)",
+  )
 ```
